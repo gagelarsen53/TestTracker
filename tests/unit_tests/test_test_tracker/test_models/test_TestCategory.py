@@ -6,7 +6,7 @@ class TestCategoryTest(TestCase):
     def setUp(self):
         self.category_1 = TestCategory(
             category="Category1",
-            description="basic test description",
+            description="basic category description",
         )
         self.category_1.save()
 
@@ -20,29 +20,29 @@ class TestCategoryTest(TestCase):
         self.category_2.delete()
 
     def test_get_json(self):
-        sp_json = self.category_1.get_json()
-        self.assertEqual({"category": "Category1"}, sp_json)
+        category_1 = self.category_1.get_json()
+        self.assertEqual({"category": "Category1"}, category_1)
 
-        sf_json = self.category_2.get_json()
-        self.assertEqual({"category": "Category2"}, sf_json)
+        category_2 = self.category_2.get_json()
+        self.assertEqual({"category": "Category2"}, category_2)
 
     def test_get_xml(self):
-        sp_xml = self.category_1.get_xml()
-        self.assertEqual("<TestCategory>Category1</TestCategory>", sp_xml)
+        category_1 = self.category_1.get_xml()
+        self.assertEqual("<TestCategory>Category1</TestCategory>", category_1)
 
-        sf_xml = self.category_2.get_xml()
-        self.assertEqual("<TestCategory>Category2</TestCategory>", sf_xml)
+        category_2 = self.category_2.get_xml()
+        self.assertEqual("<TestCategory>Category2</TestCategory>", category_2)
 
     def test_str(self):
-        sp_str = str(self.category_1)
-        self.assertEqual("<TestCategory: Category1>", sp_str)
+        category_1 = str(self.category_1)
+        self.assertEqual("<TestCategory: Category1>", category_1)
 
-        sf_str = str(self.category_2)
-        self.assertEqual("<TestCategory: Category2>", sf_str)
+        category_2 = str(self.category_2)
+        self.assertEqual("<TestCategory: Category2>", category_2)
 
     def test_description(self):
         description = self.category_1.description
-        self.assertEqual("basic test description", description)
+        self.assertEqual("basic category description", description)
 
     def test_description_default(self):
         description = self.category_2.description
