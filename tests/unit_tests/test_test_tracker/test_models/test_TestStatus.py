@@ -6,7 +6,7 @@ class TestStatusTest(TestCase):
     def setUp(self):
         self.status_pass = TestStatus(
             status="Pass",
-            hex_color="",
+            hex_color="#42f465",
         )
         self.status_pass.save()
 
@@ -40,3 +40,10 @@ class TestStatusTest(TestCase):
         sf_str = str(self.status_fail)
         self.assertEqual("<TestStatus: Fail>", sf_str)
 
+    def test_color(self):
+        color = self.status_pass.hex_color
+        self.assertEqual("#42f465", color)
+
+    def test_color_default(self):
+        color = self.status_fail.hex_color
+        self.assertEqual("#ffffff", color)
