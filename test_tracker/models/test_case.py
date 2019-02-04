@@ -84,4 +84,4 @@ class TestCase(models.Model):
         pass
 
     def __str__(self):
-        pass
+        return "<TestCase: {}>".format(self.name)
