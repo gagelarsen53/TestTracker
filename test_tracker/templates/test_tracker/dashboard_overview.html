@@ -7,6 +7,28 @@
 <body>
 
 <h1>Dashboard Overview</h1>
-
+{{ product }}
+<hr>
+{% for case, result in results.items %}
+    {{ case.name }}
+    <ul>
+    {% for r in result %}
+        {% if r.0 %}
+            <li>{{ r.1 }}: {{ r.0.status.status }}</li>
+        {% else %}
+            <li>{{ r.1 }}: No Result</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endfor %}
+<hr>
+{% for case, result in results.items %}
+    {{ case }}
+    <ul>
+    {% for r in result %}
+        <li>{{ r }}</li>
+    {% endfor %}
+    </ul>
+{% endfor %}
 </body>
 </html>

@@ -34,3 +34,5 @@ class TestResult(models.Model):
     testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE)
     note = models.TextField(max_length=256)
 
+    def __str__(self):
+        return "<TestResult: {} - {}>".format(self.testcase.name, self.date)

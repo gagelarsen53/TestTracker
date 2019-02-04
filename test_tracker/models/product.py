@@ -41,6 +41,13 @@ class Product(models.Model):
 
         return [x for x in test_cases]
 
+    def get_results(self, days=30, blanks=True):
+        results = {}
+        test_cases = self.get_test_cases(active_only=True)
+        for test_case in test_cases:
+            results[test_case] = test_case.get_last_n_days_results(n_days=days, blanks=blanks)
+        return results
+
     def get_json(self):
         raise NotImplementedError("get_json function not yet implemented for product object")
 

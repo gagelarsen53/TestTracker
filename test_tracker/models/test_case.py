@@ -42,6 +42,7 @@ class TestCase(models.Model):
     create_date = models.DateField(default=datetime.date.today)
 
     def get_last_n_days_results(self, n_days=30, blanks=False):
+        print("Getting results")
         from test_tracker.models.test_result import TestResult
         results = []
 
@@ -50,22 +51,24 @@ class TestCase(models.Model):
         last_date = today + datetime.timedelta(-1 * (n_days - 1))
         test_results = TestResult.objects.filter(
             testcase=self,
-            date__range=[today, last_date],
+            date__range=[last_date, today],
         ).order_by('-date')
 
         if blanks:
             index = 0
             date_index = 0
-            while date_index < n_days and index < len(test_results):
-                if test_results[index].date == today + datetime.timedelta(-1 * date_index):
-                    results.append(test_results[index])
+            while date_index < n_days:
+                date_delta = today + datetime.timedelta(-1 * date_index)
+                if index < len(test_results) and test_results[index].date == date_delta:
+                    results.append((test_results[index], date_delta))
                     index += 1
                 else:
-                    results.append(None)
+                    results.append((None, date_delta))
                 date_index += 1
         else:
-            results = [x for x in test_results]
+            results = [(x, x.date) for x in test_results]
 
+        print(len(results))
         return results
 
     def get_last_n_test_results(self, n=30):
