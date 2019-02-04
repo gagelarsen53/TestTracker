@@ -24,6 +24,7 @@ class TestSubcategory(models.Model):
 
     class Meta:
         verbose_name = "Test Subcategory"
+        verbose_name_plural = "Test Subcategories"
 
     subcategory = models.CharField(max_length=32, unique=True)
     description = models.CharField(max_length=64, default="No description provided...")

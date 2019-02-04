@@ -24,6 +24,7 @@ class TestStatus(models.Model):
 
     class Meta:
         verbose_name = "Test Status"
+        verbose_name_plural = "Test Status"
 
     status = models.CharField(max_length=32, unique=True)
     hex_color = models.CharField(max_length=12, default="#ffffff")

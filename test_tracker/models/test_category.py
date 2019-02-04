@@ -24,6 +24,7 @@ class TestCategory(models.Model):
 
     class Meta:
         verbose_name = "Test Category"
+        verbose_name_plural = "Test Categories"
 
     category = models.CharField(max_length=32, unique=True)
     description = models.CharField(max_length=64, default="No description provided...")
