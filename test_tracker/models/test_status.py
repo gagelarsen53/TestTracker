@@ -28,6 +28,7 @@ class TestStatus(models.Model):
 
     status = models.CharField(max_length=32, unique=True)
     hex_color = models.CharField(max_length=12, default="#ffffff")
+    text_hex_color = models.CharField(max_length=12, default="#000000")
 
     def get_json(self):
         return {"status": self.status}
