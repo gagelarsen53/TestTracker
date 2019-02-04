@@ -10,8 +10,6 @@ import logging
 
 from django.db import models
 
-from test_tracker.models.test_category import TestCategory
-
 
 log = logging.getLogger('test_tracker.' + __name__)
 
@@ -20,17 +18,14 @@ class TestSubcategory(models.Model):
     """
     A sub category field for each type of test type
 
-    category (ForeignKey): a category model object
     subcategory (CharField): a string to represent the subcategory
     description (CharField): a string to describe the subcategory
     """
 
     class Meta:
         verbose_name = "Test Subcategory"
-        unique_together = ('category', 'subcategory')
 
-    category = models.ForeignKey(TestCategory, on_delete=models.CASCADE)
-    subcategory = models.CharField(max_length=32)
+    subcategory = models.CharField(max_length=32, unique=True)
     description = models.CharField(max_length=64, default="No description provided...")
 
     def get_json(self):

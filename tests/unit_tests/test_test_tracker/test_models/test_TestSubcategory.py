@@ -5,20 +5,13 @@ from test_tracker.models.test_subcategory import TestSubcategory
 
 class TestSubcategoryTest(TestCase):
     def setUp(self):
-        self.category = TestCategory(
-            category="TestCategory"
-        )
-        self.category.save()
-
         self.subcategory_1 = TestSubcategory(
-            category=self.category,
             subcategory="Subcategory1",
             description="basic subcategory description",
         )
         self.subcategory_1.save()
 
         self.subcategory_2 = TestSubcategory(
-            category=self.category,
             subcategory="Subcategory2",
         )
         self.subcategory_2.save()
