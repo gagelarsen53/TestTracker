@@ -25,7 +25,7 @@ class TestStatus(models.Model):
     class Meta:
         verbose_name = "Test Status"
 
-    status = models.CharField(unique=True)
+    status = models.CharField(max_length=32, unique=True)
     hex_color = models.CharField(max_length=12, default="#ffffff")
 
     def get_json(self):
