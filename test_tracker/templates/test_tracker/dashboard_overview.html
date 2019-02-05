@@ -7,33 +7,22 @@
 <body>
 
 <h1>Dashboard Overview</h1>
-<hr>
-<h2>Success</h2>
-<ul>
-    {% for s in successes %}
-    <li>{{ s }}</li>
-    {% endfor %}
-</ul>
-<h2>Errors</h2>
-<ul>
-    {% for e in errors %}
-    <li>{{ e }}</li>
-    {% endfor %}
-</ul>
-<hr>
-{{ product }}
-<hr>
-{% for case, result in results.items %}
-    {{ case.name }}
-    <ul>
-    {% for r in result %}
-        {% if r.0 %}
-            <li>{{ r.1 }}: {{ r.0.status.status }}</li>
-        {% else %}
-            <li>{{ r.1 }}: No Result</li>
-        {% endif %}
-    {% endfor %}
-    </ul>
-{% endfor %}
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Active Test Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.get_product_string }}</td>
+            <td>{{ product.test_case_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 </body>
 </html>

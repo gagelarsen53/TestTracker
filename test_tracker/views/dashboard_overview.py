@@ -14,25 +14,33 @@ from test_tracker.models.test_result import TestResult
 
 
 def dashboard_overview(request):
-    product = Product.objects.get(name="GMS", version="Dev")
+    context = {}
 
-    context = {
-        'product': product
-    }
-
-    results = product.get_results(days=45, blanks=False)
-
-    # successes, errors = TestCase.test_cases_from_json_file('C:\\Personal\\TestTracker\\test_tracker\\models\\test.json')
-    # for success in successes:
-    #     success.save()
-
-    # successes, errors = TestResult.results_from_xml_file('C:\\Personal\\TestTracker\\test_tracker\\models\\results.xml',
-    #                                                      product=product, author=request.user)
-    # for success in successes:
-    #     success.save()
-
-    context['results'] = results
-    context['errors'] = errors
-    context['successes'] = successes
-
+    # Get All products
+    products = Product.objects.filter(active=True)
+    context['products'] = products
     return render(request, "test_tracker/dashboard_overview.html", context)
+
+
+
+
+# product = Product.objects.get(name="GMS", version="Dev")
+#
+# context = {
+#     'product': product
+# }
+#
+# results = product.get_results(days=45, blanks=False)
+#
+# # successes, errors = TestCase.test_cases_from_json_file('C:\\Personal\\TestTracker\\test_tracker\\models\\test.json')
+# # for success in successes:
+# #     success.save()
+#
+# # successes, errors = TestResult.results_from_xml_file('C:\\Personal\\TestTracker\\test_tracker\\models\\results.xml',
+# #                                                      product=product, author=request.user)
+# # for success in successes:
+# #     success.save()
+#
+# context['results'] = results
+# context['errors'] = errors
+# context['successes'] = successes

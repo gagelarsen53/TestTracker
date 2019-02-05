@@ -59,3 +59,7 @@ class Product(models.Model):
 
     def get_product_string(self):
         return "{}-{}".format(self.name, self.version)
+
+    def test_case_count(self):
+        from test_tracker.models.test_case import TestCase
+        return TestCase.objects.filter(product=self, active=True).count()
