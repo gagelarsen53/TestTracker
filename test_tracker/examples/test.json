@@ -1,0 +1,51 @@
+{
+  "product": "GMS",
+  "version": "Dev",
+  "test_cases": [
+    {
+      "name": "Test02",
+      "author": "glarsen",
+      "source": "testing"
+    },
+    {
+      "name": "Test03",
+      "author": "glarsen",
+      "source": "testing"
+    },
+    {
+      "name": "Test04",
+      "author": "glarsen",
+      "source": "testing"
+    },
+    {
+      "name": "Test05",
+      "author": "glarsen",
+      "source": "testing"
+    },
+    {
+      "name": "Test06",
+      "author": "glarsen",
+      "source": "testing"
+    },
+    {
+      "name": "Test07",
+      "author": "glarsen",
+      "source": "testing"
+    },
+    {
+      "name": "Test08",
+      "author": "glarsen",
+      "source": "testing"
+    },
+    {
+      "name": "Test09",
+      "author": "glarsen",
+      "source": "testing"
+    },
+    {
+      "name": "Test10",
+      "author": "glarsen",
+      "source": "testing"
+    }
+  ]
+}
