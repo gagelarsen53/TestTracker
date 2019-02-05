@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard Overview</title>
-</head>
-<body>
+{% extends "test_tracker/layout.html" %}
 
+{% block content %}
 <h1>Dashboard Overview</h1>
 <table>
     <thead>
@@ -24,5 +19,6 @@
     </tbody>
 </table>
 
-</body>
-</html>
+<a href="https://aquaveo.com" class="btn btn-large btn-danger outline">Google</a>
+
+{% endblock %}
