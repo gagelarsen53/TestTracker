@@ -7,6 +7,20 @@
 <body>
 
 <h1>Dashboard Overview</h1>
+<hr>
+<h2>Errors</h2>
+<ul>
+    {% for e in errors %}
+    <li>{{ e }}</li>
+    {% endfor %}
+</ul>
+<h2>Success</h2>
+<ul>
+    {% for s in successes %}
+    <li>{{ s }}</li>
+    {% endfor %}
+</ul>
+<hr>
 {{ product }}
 <hr>
 {% for case, result in results.items %}
@@ -18,15 +32,6 @@
         {% else %}
             <li>{{ r.1 }}: No Result</li>
         {% endif %}
-    {% endfor %}
-    </ul>
-{% endfor %}
-<hr>
-{% for case, result in results.items %}
-    {{ case }}
-    <ul>
-    {% for r in result %}
-        <li>{{ r }}</li>
     {% endfor %}
     </ul>
 {% endfor %}
