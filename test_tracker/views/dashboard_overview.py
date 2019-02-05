@@ -10,6 +10,7 @@ from django.shortcuts import render
 
 from test_tracker.models.product import Product
 from test_tracker.models.test_case import TestCase
+from test_tracker.models.test_result import TestResult
 
 
 def dashboard_overview(request):
@@ -21,9 +22,14 @@ def dashboard_overview(request):
 
     results = product.get_results(days=45, blanks=False)
 
-    successes, errors = TestCase.test_cases_from_json_file('C:\\Personal\\TestTracker\\test_tracker\\models\\test.json')
-    for success in successes:
-        success.save()
+    # successes, errors = TestCase.test_cases_from_json_file('C:\\Personal\\TestTracker\\test_tracker\\models\\test.json')
+    # for success in successes:
+    #     success.save()
+
+    # successes, errors = TestResult.results_from_xml_file('C:\\Personal\\TestTracker\\test_tracker\\models\\results.xml',
+    #                                                      product=product, author=request.user)
+    # for success in successes:
+    #     success.save()
 
     context['results'] = results
     context['errors'] = errors
