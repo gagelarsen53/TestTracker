@@ -7,3 +7,5 @@
 ********************************************************************************
 """
 from test_tracker.views.dashboard_overview import dashboard_overview
+from test_tracker.views.form_views import ProductCreateView
+from test_tracker.views.form_views import ProductUpdateView

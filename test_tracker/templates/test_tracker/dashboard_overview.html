@@ -1,12 +1,23 @@
 {% extends "test_tracker/layout.html" %}
 
 {% block content %}
+
+<!-- Modal Form -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
 <h1>Dashboard Overview</h1>
 <table>
     <thead>
         <tr>
             <th>Product</th>
             <th>Active Test Count</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -14,11 +25,34 @@
         <tr>
             <td>{{ product.get_product_string }}</td>
             <td>{{ product.test_case_count }}</td>
+            <td>
+                <button type="button" class="update-product btn btn-sm btn-primary" data-id="{% url 'update_product' product.pk %}">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
 <a href="https://aquaveo.com" class="btn btn-large btn-danger outline">Google</a>
+
+<!-- Create book button -->
+<button class="create-product btn btn-primary" type="button" name="button">Add Product</button>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $(".create-product").modalForm({
+        formURL: "{% url 'create_product' %}"
+    });
+
+});
+
+
+$(".update-product").each(function () {
+    $(this).modalForm({formURL: $(this).data('id')});
+});
+</script>
 
 {% endblock %}
