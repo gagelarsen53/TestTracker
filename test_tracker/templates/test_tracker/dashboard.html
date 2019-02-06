@@ -32,7 +32,7 @@
         </td>
         {% for r in case.results %}
             {% if r.0 %}
-                <td bgcolor="{{ r.0.status.hex_color }}">
+                <td title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" bgcolor="{{ r.0.status.hex_color }}">
                     <a class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
                         {{ r.0.status.status }}
                     </a>
