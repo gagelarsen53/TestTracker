@@ -1,0 +1,49 @@
+{% extends "test_tracker/layout.html" %}
+
+{% block content %}
+<h1>{{ product.get_product_string }}</h1>
+
+<button type="button" class="create-testcase btn btn-sm btn-success" data-id="{% url 'create_testcase'%}">
+    <span class="glyphicon glyphicon-plus"></span> Create
+</button>
+
+<table class="table table-bordered">
+
+    <!-- Table Header -->
+    <thead>
+        <th>Test Case</th>
+        <th>Actions</th>
+        {% for date in dates %}
+            <th>{{ date }}</th>
+        {% endfor %}
+    </thead>
+
+    <tbody>
+    {% for case in testcases %}
+    <tr>
+        <td>{{ case.testcase.name }}</td>
+        <td>
+            <button type="button" class="update-testcase btn btn-sm btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </td>
+        {% for r in case.results %}
+            {% if r.0 %}
+                <td bgcolor="{{ r.0.status.hex_color }}">
+                    <a class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
+                        {{ r.0.status.status }}
+                    </a>
+                </td>
+            {% else %}
+                <td></td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

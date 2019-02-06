@@ -4,7 +4,7 @@
 {% load static %}
 <!-- JQUERY -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -23,11 +23,53 @@
 </head>
 <body>
 
+<!-- Modal Form -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
 <div class="container">
 {% block content%}
 
 {% endblock %}
 </div>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".create-product").modalForm({
+        formURL: "{% url 'create_product' %}"
+    });
+});
+$(".update-product").each(function () {
+    $(this).modalForm({formURL: $(this).data('id')});
+});
+
+
+$(document).ready(function() {
+    $(".create-testcase").modalForm({
+        formURL: "{% url 'create_testcase' %}"
+    });
+});
+$(".update-testcase").each(function () {
+    $(this).modalForm({formURL: $(this).data('id')});
+});
+
+
+$(document).ready(function() {
+    $(".create-testresult").modalForm({
+        formURL: "{% url 'create_result' %}"
+    });
+});
+$(".update-testresult").each(function () {
+    $(this).modalForm({formURL: $(this).data('id')});
+});
+</script>
 
 </body>
 </html>

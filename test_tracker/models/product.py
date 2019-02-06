@@ -33,7 +33,7 @@ class Product(models.Model):
         from test_tracker.models.test_case import TestCase
 
         # Get all testcases
-        test_cases = TestCase.objects.filter(product=self)
+        test_cases = TestCase.objects.filter(product=self).order_by('name')
 
         # Filter out in active
         if active_only:
