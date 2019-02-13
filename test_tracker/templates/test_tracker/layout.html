@@ -1,5 +1,13 @@
 {% extends "general/general_layout.html" %}
 
+<!-- Project Header -->
+{% block project_head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tracker.css' %}">
+{% endblock %}
+
+
+<!-- Project Dropdown -->
 {% block project_dropdown %}
 <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -18,9 +26,13 @@
 </li>
 {% endblock %}
 
+
+<!-- Project Content -->
 {% block content %}
 
+<div class="test_tracker_content">
 {% block test_tracker_content %}
 {% endblock %}
+</div>
 
 {% endblock %}

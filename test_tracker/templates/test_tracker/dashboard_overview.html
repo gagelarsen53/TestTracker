@@ -1,33 +1,40 @@
 {% extends "test_tracker/layout.html" %}
 
 {% block test_tracker_content %}
-<h1>Dashboard Overview</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Active Test Count</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for product in products %}
-        <tr>
-            <td><a href="{% url 'dashboard' product.name product.version %}">{{ product.get_product_string }}</a></td>
-            <td>{{ product.test_case_count }}</td>
-            <td>
-                <button type="button" class="update-product btn btn-sm btn-primary" data-id="{% url 'update_product' product.pk %}">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </button>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-sm-3 col-md-2 sidebar"></div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Dashboard Overview</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Active Test Count</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td><a href="{% url 'dashboard' product.name product.version %}">
+                        {{ product.get_product_string }}
+                    </a></td>
+                    <td>{{ product.test_case_count }}</td>
+                    <td>
+                        <button type="button" class="update-product btn btn-sm btn-primary"
+                                data-id="{% url 'update_product' product.pk %}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-<a href="https://aquaveo.com" class="btn btn-large btn-danger outline">Google</a>
+        <a href="https://aquaveo.com" class="btn btn-large btn-danger outline">Google</a>
 
-<!-- Create book button -->
-<button class="create-product btn btn-primary" type="button" name="button">Add Product</button>
-
+        <!-- Create book button -->
+        <button class="create-product btn btn-primary" type="button" name="button">Add Product</button>
+    </div>
+</div>
 {% endblock %}

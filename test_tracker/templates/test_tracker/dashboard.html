@@ -1,51 +1,161 @@
 {% extends "test_tracker/layout.html" %}
 
 {% block test_tracker_content %}
-<h1>{{ product.get_product_string }}</h1>
-
-<img src="data:image/png;base64,{{ graphic|safe }}">
-
-<button type="button" class="create-testcase btn btn-sm btn-success" data-id="{% url 'create_testcase'%}">
-    <span class="glyphicon glyphicon-plus"></span> Create
-</button>
-
-<table class="table table-bordered">
-
-    <!-- Table Header -->
-    <thead>
-        <th>Test Case</th>
-        <th>Actions</th>
-        {% for date in dates %}
-            <th>{{ date }}</th>
-        {% endfor %}
-    </thead>
-
-    <tbody>
-    {% for case in testcases %}
-    <tr>
-        <td>{{ case.testcase.name }}</td>
-        <td>
-            <button type="button" class="update-testcase btn btn-sm btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-            <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-        </td>
-        {% for r in case.results %}
-            {% if r.0 %}
-                <td title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" bgcolor="{{ r.0.status.hex_color }}">
-                    <a class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
-                        {{ r.0.status.status }}
-                    </a>
-                </td>
-            {% else %}
-                <td></td>
+<div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+            <li><h3>Filter Options<h3></li>
+            <li><input type="checkbox" id="showInactiveCases"> Show Inactive Test Cases</li>
+            {% if user.is_authenticated %}
+            <li><input type="checkbox" id="showActions"> Show Actions</li>
             {% endif %}
-        {% endfor %}
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+            <li><input id="test-case-filter-text" type="text" placeholder="Search..."></li>
+        </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+        <h1 class="page-header">{{ product.get_product_string }}</h1>
+
+        <!-- Create Test Case
+        <button type="button" class="create-testcase btn btn-sm btn-success" data-id="{% url 'create_testcase'%}">
+            <span class="glyphicon glyphicon-plus"></span> Create
+        </button>
+        -->
+
+        <table class="table table-bordered test-tracker-dashboard">
+
+            <!-- Table Header -->
+            <thead>
+                <th>Test Case</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                {% if user.is_authenticated %}
+                {% endif %}
+                {% for date in dates %}
+                    <th>{{ date }}
+                        <button class="daily-stats btn btn-xs btn-info"><span
+                            class="glyphicon glyphicon-info-sign" aria-hidden="true"
+                            data-id="{% url 'daily_stats' product.name product.version date.day date.month date.year%}"></span>
+                        </button>
+                    </th>
+                {% endfor %}
+            </thead>
+
+            <tbody id="dashboard-table">
+            {% for case in testcases %}
+            <tr class="test-active-{{ case.testcase.active }}">
+                <td>
+                    {{ case.testcase.name }}
+                    {% if user.is_authenticated %}
+                    <div class="dashboard-actions">
+                        <button type="button" class="update-testcase btn btn-sm btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </div>
+                    {% endif %}
+                </td>
+                <td>{{ case.testcase.category.category }}</td>
+                <td>{{ case.testcase.subcategory.subcategory }}</td>
+                {% for r in case.results %}
+                    {% if r.0 %}
+                        <td title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" bgcolor="{{ r.0.status.hex_color }}">
+                            {% if user.is_authenticated %}
+                            <a class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
+                                {{ r.0.status.status }}
+                            </a>
+                            {% else %}
+                            {{ r.0.status.status }}
+                            {% endif %}
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function toggle_view(selector, checked_state) {
+        $(selector).toggle(checked_state)
+    }
+
+    $('#showInactiveCases').click(function() {
+        toggle_view(".test-active-False", this.checked);
+        localStorage.setItem("show_active_value", this.checked);
+    });
+    $('#showActions').click(function() {
+        toggle_view(".dashboard-actions", this.checked);
+        localStorage.setItem("show_actions_value", this.checked);
+    });
+
+    $("#test-case-filter-text").on("keyup", function() {
+      show_active_value = localStorage.getItem('show_active_value') == 'true' ? true : false;
+      var value = $(this).val().toLowerCase();
+      localStorage.setItem("dashboard_filter_string", value);
+      $("#dashboard-table tr").filter(function() {
+        var text = $(this).text().toLowerCase();
+        var idx = text.indexOf(value) > -1
+        if (show_active_value || $(this).hasClass('test-active-True')) {
+          $(this).toggle(idx)
+        }
+      });
+    });
+
+    $(document).ready(function() {
+        show_active_value = localStorage.getItem('show_active_value') == 'true' ? true : false;
+        $('#showInactiveCases').prop('checked', show_active_value);
+        toggle_view(".test-active-False", show_active_value);
+        show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
+        $('#showActions').prop('checked', show_actions_value);
+        toggle_view(".dashboard-actions", show_actions_value);
+
+        dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
+        if (dashboard_filter_string != '') {
+            text_box = $('#test-case-filter-text');
+            text_box.val(dashboard_filter_string);
+            $('#test-case-filter-text').keyup()
+        }
+    });
+
+$(document).ready(function() {
+    $(".create-product").modalForm({
+        formURL: "{% url 'create_product' %}"
+    });
+});
+$(".update-product").each(function () {
+    $(this).modalForm({formURL: $(this).data('id')});
+});
+
+
+$(document).ready(function() {
+    $(".create-testcase").modalForm({
+        formURL: "{% url 'create_testcase' %}"
+    });
+});
+$(".update-testcase").each(function () {
+    $(this).modalForm({formURL: $(this).data('id')});
+});
+
+$(document).ready(function() {
+    $(".create-testresult").modalForm({
+        formURL: "{% url 'create_result' %}"
+    });
+});
+
+$(".update-testresult").each(function () {
+    $(this).modalForm({formURL: $(this).data('id')});
+});
+
+$(".daily-stats").each(function () {
+    $(this).modalForm({formURL: $(this).data('name', 'version', 'day', 'month', 'year')});
+});
+</script>
 
 {% endblock %}

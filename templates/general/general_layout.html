@@ -18,7 +18,17 @@
 <!-- Bootstrap Modal Forms -->
 <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
 
+<!-- Local CSS -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% block project_head %}
+{% endblock %}
+
+<style>
+    body {
+        padding-top: 65px;
+    }
+</style>
 
 </head>
 <body>
@@ -57,10 +67,21 @@
 
                 {% endblock %}
             </ul>
+            <form class="nav-form navbar-right">
+                {% if not user.is_authenticated %}
+                <div style="padding-top: 7px; padding-bottom: 7px; padding-right: 25px;">
+                    <a class="btn btn-sml btn-success" href="{% url 'login' %}">Login</a>
+                </div>
+                {% else %}
+                <div style="color: white; padding-top: 15px; padding-bottom: 15px; padding-right: 25px;">
+                    {{ user.email }} [ <a href="{% url 'logout' %}">logout</a> ]
+                </div>
+                {% endif %}
+            </form>
         </div>
     </div>
 </nav>
-<div class="container">
+<div class="container-fluid">
 {% block content%}
 
 {% endblock %}
@@ -68,36 +89,6 @@
 
 
 
-<script type="text/javascript">
-$(document).ready(function() {
-    $(".create-product").modalForm({
-        formURL: "{% url 'create_product' %}"
-    });
-});
-$(".update-product").each(function () {
-    $(this).modalForm({formURL: $(this).data('id')});
-});
-
-
-$(document).ready(function() {
-    $(".create-testcase").modalForm({
-        formURL: "{% url 'create_testcase' %}"
-    });
-});
-$(".update-testcase").each(function () {
-    $(this).modalForm({formURL: $(this).data('id')});
-});
-
-
-$(document).ready(function() {
-    $(".create-testresult").modalForm({
-        formURL: "{% url 'create_result' %}"
-    });
-});
-$(".update-testresult").each(function () {
-    $(this).modalForm({formURL: $(this).data('id')});
-});
-</script>
 
 </body>
 </html>
