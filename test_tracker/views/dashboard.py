@@ -24,6 +24,10 @@ def dashboard(request, name, version):
         'product': None,
     }
 
+    # Get All products
+    products = Product.objects.filter(active=True).order_by("name")
+    context['products'] = products
+
     # Get the Product
     try:
         context['product'] = Product.objects.get(

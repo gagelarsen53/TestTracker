@@ -1,0 +1,26 @@
+{% extends "general/general_layout.html" %}
+
+{% block project_dropdown %}
+<li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        Dashboards <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        <li><a href="/TestTracker">Overview</a></li>
+        {% for product in products %}
+            <li>
+                <a href="/TestTracker/dashboard/{{ product.name }}/{{product.version}}">
+                    {{ product.name }}-{{ product.version }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</li>
+{% endblock %}
+
+{% block content %}
+
+{% block test_tracker_content %}
+{% endblock %}
+
+{% endblock %}

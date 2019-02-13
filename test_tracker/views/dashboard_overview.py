@@ -17,7 +17,7 @@ def dashboard_overview(request):
     context = {}
 
     # Get All products
-    products = Product.objects.filter(active=True)
+    products = Product.objects.filter(active=True).order_by("name")
     context['products'] = products
     return render(request, "test_tracker/dashboard_overview.html", context)
 
