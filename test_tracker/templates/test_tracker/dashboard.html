@@ -1,7 +1,9 @@
-{% extends "general/layout.html" %}
+{% extends "general/general_layout.html" %}
 
 {% block content %}
 <h1>{{ product.get_product_string }}</h1>
+
+<img src="data:image/png;base64,{{ graphic|safe }}">
 
 <button type="button" class="create-testcase btn btn-sm btn-success" data-id="{% url 'create_testcase'%}">
     <span class="glyphicon glyphicon-plus"></span> Create

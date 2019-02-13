@@ -6,7 +6,10 @@
 * Copyright: (c) GLD
 ********************************************************************************
 """
+from io import BytesIO
+import base64
 import datetime
+import matplotlib.pyplot as plt
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
