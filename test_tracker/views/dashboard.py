@@ -22,6 +22,7 @@ def dashboard(request, name, version):
         'got_product': False,
         'test_cases': [],
         'product': None,
+        'errors': []
     }
 
     # Get All products

@@ -1,3 +1,16 @@
 {% load widget_tweaks %}
+<style>
+    .modal-stats {
+        padding-left:    15px;
+        padding-right:    15px;
+        padding-bottom:    15px;
+    }
 
-Test Popup
+    img {
+        width: 100%;
+    }
+</style>
+<div class="modal-stats">
+    <h1 class="page-header">Statistics: {{ date }}</h1>
+    <img src="data:image/png;base64,{{ test_status|safe }}">
+</div>

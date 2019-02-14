@@ -13,6 +13,10 @@ from test_tracker import views
 urlpatterns = [
     # General
     path('', views.dashboard_overview, name='index'),
+    # Statistics
+    path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>',
+         views.daily_stats, name='daily_stats'),
+    # Dashboard
     path('dashboard/<str:name>/<str:version>', views.dashboard, name='dashboard'),
     # Create
     path('create/product', views.ProductCreateView.as_view(), name='create_product'),
@@ -22,6 +26,4 @@ urlpatterns = [
     path('update/product/<int:pk>', views.ProductUpdateView.as_view(), name='update_product'),
     path('update/testcase/<int:pk>', views.TestCaseUpdateView.as_view(), name='update_testcase'),
     path('update/result/<int:pk>', views.TestResultUpdateView.as_view(), name='update_result'),
-    # Statistics
-    path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>', views.daily_stats, name='daily_stats')
 ]

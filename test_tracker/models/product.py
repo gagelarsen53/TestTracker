@@ -10,7 +10,6 @@ import logging
 
 from django.db import models
 
-
 log = logging.getLogger('test_tracker.' + __name__)
 
 
@@ -47,6 +46,14 @@ class Product(models.Model):
         for test_case in test_cases:
             results[test_case] = test_case.get_last_n_days_results(n_days=days, blanks=blanks)
         return results
+
+    def get_results_for_date(self, result_date):
+        from test_tracker.models.test_result import TestResult
+        results = TestResult.objects.filter(
+            testcase__product=self,
+            date=result_date
+        )
+        return [x for x in results]
 
     def get_json(self):
         raise NotImplementedError("get_json function not yet implemented for product object")
