@@ -18,6 +18,8 @@ urlpatterns = [
          views.daily_stats, name='daily_stats'),
     # Dashboard
     path('dashboard/<str:name>/<str:version>', views.dashboard, name='dashboard'),
+    # Upload
+    path('upload/results/<str:name>/<str:version>', views.upload_results, name='upload_results'),
     # Create
     path('create/product', views.ProductCreateView.as_view(), name='create_product'),
     path('create/testcase', views.TestCaseCreateView.as_view(), name='create_testcase'),

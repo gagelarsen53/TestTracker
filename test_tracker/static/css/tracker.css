@@ -85,3 +85,10 @@ body {
   margin-top: 0;
 }
 
+
+/*
+ CUSTOM
+*/
+.dashboard-action-button {
+    padding-bottom: 10px;
+}

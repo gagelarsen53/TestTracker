@@ -4,12 +4,25 @@
 <div class="row">
     <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-            <li><h3>Filter Options<h3></li>
+
+            <li><h3>Filter Options:<h3></li>
             <li><input type="checkbox" id="showInactiveCases"> Show Inactive Test Cases</li>
             {% if user.is_authenticated %}
             <li><input type="checkbox" id="showActions"> Show Actions</li>
             {% endif %}
             <li><input id="test-case-filter-text" type="text" placeholder="Search..."></li>
+
+            <li><h3>Actions:<h3></li>
+            <li class="dashboard-action-button">
+                <button data-id="{% url 'create_testcase'%}" class="create-testcase btn btn-sm btn-success">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Create TestCase
+                </button>
+            </li>
+            <li class="dashboard-action-button">
+                <button data-url="{% url 'upload_results' product.name product.version %}" class="upload-results btn btn-sm btn-success">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Upload Test Results
+                </button>
+            </li>
         </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -22,17 +35,17 @@
         </button>
         -->
 
-        <table class="table table-bordered test-tracker-dashboard">
+        <table id="test-tracker-dashboard" class="table table-bordered test-tracker-dashboard">
 
             <!-- Table Header -->
             <thead>
-                <th>Test Case</th>
-                <th>Category</th>
-                <th>Subcategory</th>
+                <th onclick="sortTable(0, false)">Test Case</th>
+                <th onclick="sortTable(1, false)">Category</th>
+                <th onclick="sortTable(2, false)">Subcategory</th>
                 {% if user.is_authenticated %}
                 {% endif %}
                 {% for date in dates %}
-                    <th>{{ date }}
+                    <th onclick="sortTable({{ forloop.counter }}, true)">{{ date }}
                         <button data-url="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="daily-stats btn btn-xs btn-info">
                             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                         </button>
@@ -123,40 +136,102 @@
         }
     });
 
-$(document).ready(function() {
-    $(".create-product").modalForm({
-        formURL: "{% url 'create_product' %}"
+    $(document).ready(function() {
+        $(".create-product").modalForm({
+            formURL: "{% url 'create_product' %}"
+        });
     });
-});
-$(".update-product").each(function () {
-    $(this).modalForm({formURL: $(this).data('id')});
-});
-
-
-$(document).ready(function() {
-    $(".create-testcase").modalForm({
-        formURL: "{% url 'create_testcase' %}"
+    $(".update-product").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
     });
-});
-$(".update-testcase").each(function () {
-    $(this).modalForm({formURL: $(this).data('id')});
-});
 
-$(document).ready(function() {
-    $(".create-testresult").modalForm({
-        formURL: "{% url 'create_result' %}"
+    $(document).ready(function() {
+        $(".create-testcase").modalForm({
+            formURL: "{% url 'create_testcase' %}"
+        });
     });
-});
 
-$(".update-testresult").each(function () {
-    $(this).modalForm({formURL: $(this).data('id')});
-});
+    $(document).ready(function() {
+        var url = $(".upload-results").data('url');
+        $(".upload-results").modalForm({
+            formURL: url
+        });
+    });
 
-$(".daily-stats").each(function () {
-    var t = $(this)
-    var url = $(this).data('url')
-    $(this).modalForm({formURL: $(this).data('url')});
-});
+    $(".update-testcase").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+    });
+
+    $(document).ready(function() {
+        $(".create-testresult").modalForm({
+            formURL: "{% url 'create_result' %}"
+        });
+    });
+
+    $(".update-testresult").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+    });
+
+    $(".daily-stats").each(function () {
+        var t = $(this)
+        var url = $(this).data('url')
+        $(this).modalForm({formURL: $(this).data('url')});
+    });
+
+    function sortTable(n, dates) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("test-tracker-dashboard");
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "asc";
+      /* Make a loop that will continue until
+      no switching has been done: */
+      while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1:
+          switchcount ++;
+        } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
 </script>
 
 {% endblock %}
