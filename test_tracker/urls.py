@@ -23,7 +23,10 @@ urlpatterns = [
     # Create
     path('create/product', views.ProductCreateView.as_view(), name='create_product'),
     path('create/testcase', views.TestCaseCreateView.as_view(), name='create_testcase'),
-    path('create/result/<', views.TestResultCreateView.as_view(), name='create_result'),
+    path('create/result', views.TestResultCreateView.as_view(), name='create_result'),
+    path('create/testcategory', views.TestCategoryCreateView.as_view(), name='create_testcategory'),
+    path('create/testsubcategory', views.TestSubcategoryCreateView.as_view(), name='create_testsubcategory'),
+    path('create/teststatus', views.TestStatusCreateView.as_view(), name='create_teststatus'),
     # Update
     path('update/product/<int:pk>', views.ProductUpdateView.as_view(), name='update_product'),
     path('update/testcase/<int:pk>', views.TestCaseUpdateView.as_view(), name='update_testcase'),

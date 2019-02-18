@@ -23,37 +23,29 @@
                         <input type="submit" class="btn btn-sm btn-success" value="Upload Test Results">
                     </form>
                 </li>
-            <!--
                 {% if user.is_staff %}
                 <li class="dashboard-action-button">
-                    <button class="create-category btn btn-sm btn-success">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create Category
+                    <button data-id="{% url 'create_testcategory'%}" class="create-test-category btn btn-sm btn-success">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create Test Category
                     </button>
                 </li>
                 <li class="dashboard-action-button">
-                    <button class="create-subcategory btn btn-sm btn-success">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create Subcategory
+                    <button data-id="{% url 'create_testsubcategory'%}" class="create-test-subcategory btn btn-sm btn-success">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create Test Subcategory
                     </button>
                 </li>
                 <li class="dashboard-action-button">
-                    <button class="create-status btn btn-sm btn-success">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create Status
+                    <button data-id="{% url 'create_teststatus'%}" class="create-test-status btn btn-sm btn-success">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create Test Status
                     </button>
                 </li>
                 {% endif %}
-            -->
             {% endif %}
         </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
         <h1 class="page-header">{{ product.get_product_string }}</h1>
-
-        <!-- Create Test Case
-        <button type="button" class="create-testcase btn btn-sm btn-success" data-id="{% url 'create_testcase'%}">
-            <span class="glyphicon glyphicon-plus"></span> Create
-        </button>
-        -->
 
         <table id="test-tracker-dashboard" class="table table-bordered test-tracker-dashboard">
 
@@ -168,6 +160,24 @@
     $(document).ready(function() {
         $(".create-testcase").modalForm({
             formURL: "{% url 'create_testcase' %}"
+        });
+    });
+
+    $(document).ready(function() {
+        $(".create-test-category").modalForm({
+            formURL: "{% url 'create_testcategory' %}"
+        });
+    });
+
+    $(document).ready(function() {
+        $(".create-test-subcategory").modalForm({
+            formURL: "{% url 'create_testsubcategory' %}"
+        });
+    });
+
+    $(document).ready(function() {
+        $(".create-test-status").modalForm({
+            formURL: "{% url 'create_teststatus' %}"
         });
     });
 
