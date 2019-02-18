@@ -7,10 +7,16 @@ from bootstrap_modal_forms.mixins import PassRequestMixin
 from test_tracker.forms.product_form import ProductForm
 from test_tracker.forms.testcase_form import TestCaseForm
 from test_tracker.forms.testresult_form import TestResultForm
+from test_tracker.forms.testcatgory_form import TestCategoryForm
+from test_tracker.forms.testsubcategory_form import TestSubcategoryForm
+from test_tracker.forms.teststatus_from import TestStatusForm
 
 from test_tracker.models import Product
 from test_tracker.models import TestCase
 from test_tracker.models import TestResult
+from test_tracker.models import TestCategory
+from test_tracker.models import TestSubcategory
+from test_tracker.models import TestStatus
 
 
 class ProductCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):
@@ -80,3 +86,32 @@ class TestResultUpdateView(PassRequestMixin, SuccessMessageMixin, generic.Update
             'name': product.name,
             'version': product.version,
         })
+
+
+class TestCategoryCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):
+    template_name = 'test_tracker/create.html'
+    form_class = TestCategoryForm
+    success_message = 'Success: TestCategory was created.'
+
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER', '/')
+
+
+class TestSubcategoryCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):
+    template_name = 'test_tracker/create.html'
+    form_class = TestSubcategoryForm
+    success_message = 'Success: TestSubcategory was created.'
+
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER', '/')
+
+
+class TestStatusCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):
+    template_name = 'test_tracker/create.html'
+    form_class = TestStatusForm
+    success_message = 'Success: TestStatus was created.'
+
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER', '/')
+
+
