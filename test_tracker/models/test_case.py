@@ -105,8 +105,11 @@ class TestCase(models.Model):
         # Get the json data
         data = {}
         try:
-            with open(_json_file, 'r') as jf:
-                data = json.load(jf)
+            if isinstance(_json_file, str):
+                with open(_json_file, 'r') as jf:
+                    data = json.load(jf)
+            else:
+                data = json.load(_json_file)
         except IOError:
             errors.append("Could not read file: {}".format(_json_file))
         except ValueError:

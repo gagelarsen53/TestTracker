@@ -20,6 +20,7 @@ urlpatterns = [
     path('dashboard/<str:name>/<str:version>', views.dashboard, name='dashboard'),
     # Upload
     path('upload/results/<str:name>/<str:version>', views.upload_results, name='upload_results'),
+    path('upload/testcases/<str:name>/<str:version>', views.upload_testcases, name='upload_testcases'),
     # Create
     path('create/product', views.ProductCreateView.as_view(), name='create_product'),
     path('create/testcase', views.TestCaseCreateView.as_view(), name='create_testcase'),

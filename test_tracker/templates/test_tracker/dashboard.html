@@ -23,6 +23,11 @@
                         <input type="submit" class="btn btn-sm btn-success" value="Upload Test Results">
                     </form>
                 </li>
+                <li class="dashboard-action-button">
+                    <form action="{% url 'upload_testcases' product.name product.version %}">
+                        <input type="submit" class="btn btn-sm btn-success" value="Upload Test Cases">
+                    </form>
+                </li>
                 {% if user.is_staff %}
                 <li class="dashboard-action-button">
                     <button data-id="{% url 'create_testcategory'%}" class="create-test-category btn btn-sm btn-success">

@@ -10,6 +10,7 @@ from test_tracker.views.dashboard_overview import dashboard_overview
 from test_tracker.views.dashboard import dashboard
 from test_tracker.views.daily_stats import daily_stats
 from test_tracker.views.upload_results import upload_results
+from test_tracker.views.upload_testcases import upload_testcases
 from test_tracker.views.form_views import ProductCreateView
 from test_tracker.views.form_views import ProductUpdateView
 from test_tracker.views.form_views import TestCaseCreateView

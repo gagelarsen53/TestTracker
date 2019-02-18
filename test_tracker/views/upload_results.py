@@ -6,24 +6,20 @@
 * Copyright: (c) GLD
 ********************************************************************************
 """
-from io import BytesIO
-import base64
 import datetime
-import matplotlib.pyplot as plt
 
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from test_tracker.models.product import Product
 from test_tracker.forms.upload_results_form import UploadResultsForm
-from test_tracker.models.test_status import TestStatus
 from test_tracker.models.test_result import TestResult
-from test_tracker.models.test_case import TestCase
 
 
 @login_required
+@transaction.atomic
 def upload_results(request, name, version):
     context = {}
     context['products'] = Product.objects.filter()
