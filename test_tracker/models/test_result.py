@@ -47,7 +47,7 @@ class TestResult(models.Model):
         return "<TestResult: {} - {}>".format(self.testcase.name, self.date)
 
     @classmethod
-    def results_from_xml_file(cls, _xml_file, product, author):
+    def results_from_xml_file(cls, _xml_file, product, author, date):
         errors = []
         successes = []
         results = {
@@ -82,7 +82,7 @@ class TestResult(models.Model):
             if not name or not status:
                 continue
 
-            test_name_re = r'Script Test Log \[[A-Za-z_]*\\[Tt]est_([A-Za-z0-9_]*)\]'
+            test_name_re = r'Script Test Log \[[A-Za-z_]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
             test_name_search = re.search(test_name_re, name)
             if not test_name_search:
                 errors.append("Test is not named properly: '{}'".format(name))
@@ -97,7 +97,10 @@ class TestResult(models.Model):
             tests[test_name] = results[status]
 
         for test in tests.keys():
-            test_date = datetime.date.today()
+            if date == None:
+                test_date = datetime.date.today()
+            else:
+                test_date = date
             test_case = None
             try:
                 test_case = TestCase.objects.get(product=product, name=test)
