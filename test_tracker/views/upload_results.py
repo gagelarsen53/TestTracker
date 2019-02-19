@@ -35,8 +35,7 @@ def upload_results(request, name, version):
         form = UploadResultsForm(request.POST, request.FILES)
         if form.is_valid():
             context['post_data'] = True
-            print(request.POST)
-            year, month, day = request.POST['date_of_results'].split("-")
+            month, day, year = request.POST['date_of_results'].split("/")
             result_date = datetime.date(year=int(year), month=int(month), day=int(day))
             results, errors = TestResult.results_from_xml_file(request.FILES['results_file'], product,
                                                                date=result_date, author=author)
