@@ -7,6 +7,7 @@
 ********************************************************************************
 """
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -16,6 +17,7 @@ from test_tracker.models.test_case import TestCase
 
 
 @login_required
+@transaction.atomic
 def upload_testcases(request, name, version):
     context = {}
     products = Product.objects.filter()
