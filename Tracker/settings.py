@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'bootstrap3',
     'bootstrap_modal_forms',
+    'bootstrap_datepicker_plus',
     'test_tracker',
 ]
 
@@ -127,3 +129,7 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+BOOTSTRAP3 = {
+    'include_jquery': True,
+}
