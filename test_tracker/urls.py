@@ -18,6 +18,7 @@ urlpatterns = [
          views.daily_stats, name='daily_stats'),
     # Dashboard
     path('dashboard/<str:name>/<str:version>', views.dashboard, name='dashboard'),
+    path('dashboard/<str:name>/<str:version>/table', views.dashboard_table, name='dashboard_table'),
     # Upload
     path('upload/results/<str:name>/<str:version>', views.upload_results, name='upload_results'),
     path('upload/testcases/<str:name>/<str:version>', views.upload_testcases, name='upload_testcases'),
