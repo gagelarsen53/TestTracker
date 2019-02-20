@@ -49,64 +49,72 @@
         </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
         <h1 class="page-header">{{ product.get_product_string }}</h1>
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#dashboard">Dashboard</a></li>
+          <li><a data-toggle="tab" href="#info">Info</a></li>
+        </ul>
 
-        <table id="test-tracker-dashboard" class="table table-bordered test-tracker-dashboard">
+        <div class="tab-content">
+            <div id="dashboard" class="tab-pane fade in active">
+                <table id="test-tracker-dashboard" class="table table-bordered test-tracker-dashboard">
+                    <thead>
+                        <th class="sortable">Test Case</th>
+                        <th class="sortable">Category</th>
+                        <th class="sortable">Subcategory</th>
+                        {% if user.is_authenticated %}
+                        {% endif %}
+                        {% for date in dates %}
+                            <th class="sortable">{{ date }}
+                                <button data-url="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="daily-stats btn btn-xs btn-info">
+                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                </button>
+                            </th>
+                        {% endfor %}
+                    </thead>
 
-            <!-- Table Header -->
-            <thead>
-                <th class="sortable">Test Case</th>
-                <th class="sortable">Category</th>
-                <th class="sortable">Subcategory</th>
-                {% if user.is_authenticated %}
-                {% endif %}
-                {% for date in dates %}
-                    <th class="sortable">{{ date }}
-                        <button data-url="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="daily-stats btn btn-xs btn-info">
-                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                        </button>
-                    </th>
-                {% endfor %}
-            </thead>
-
-            <tbody id="dashboard-table">
-            {% for case in testcases %}
-            <tr class="test-active-{{ case.testcase.active }}">
-                <td>
-                    {{ case.testcase.name }}
-                    {% if user.is_authenticated %}
-                    <div class="dashboard-actions">
-                        <button type="button" class="update-testcase btn btn-sm btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </button>
-                        <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </div>
-                    {% endif %}
-                </td>
-                <td>{{ case.testcase.category.category }}</td>
-                <td>{{ case.testcase.subcategory.subcategory }}</td>
-                {% for r in case.results %}
-                    {% if r.0 %}
-                        <td title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" bgcolor="{{ r.0.status.hex_color }}">
+                    <tbody id="dashboard-table">
+                    {% for case in testcases %}
+                    <tr class="test-active-{{ case.testcase.active }}">
+                        <td>
+                            {{ case.testcase.name }}
                             {% if user.is_authenticated %}
-                            <a class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
-                                {{ r.0.status.status }}
-                            </a>
-                            {% else %}
-                            {{ r.0.status.status }}
+                            <div class="dashboard-actions">
+                                <button type="button" class="update-testcase btn btn-sm btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </button>
+                                <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </div>
                             {% endif %}
                         </td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                        <td>{{ case.testcase.category.category }}</td>
+                        <td>{{ case.testcase.subcategory.subcategory }}</td>
+                        {% for r in case.results %}
+                            {% if r.0 %}
+                                <td class="dashboard-status-cell" title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" bgcolor="{{ r.0.status.hex_color }}">
+                                    {% if user.is_authenticated %}
+                                    <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
+                                        {{ r.0.status.status }}
+                                    </a>
+                                    {% else %}
+                                    {{ r.0.status.status }}
+                                    {% endif %}
+                                </td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="info" class="tab-pane fade">
+
+            </div>
+        </div>
     </div>
 </div>
 
