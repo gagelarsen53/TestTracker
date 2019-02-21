@@ -22,7 +22,7 @@
             {{ case.testcase.name }}
             {% if user.is_authenticated %}
             <div class="dashboard-actions">
-                <button type="button" class="update-testcase btn btn-sm btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
+                <button type="button" class="update-testcase btn btn-xs btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
                 <!-- Until we can find a better way to do this. Lets not make it an option...
