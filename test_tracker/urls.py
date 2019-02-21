@@ -19,6 +19,7 @@ urlpatterns = [
     # Dashboard
     path('dashboard/<str:name>/<str:version>', views.dashboard, name='dashboard'),
     path('dashboard/<str:name>/<str:version>/table', views.dashboard_table, name='dashboard_table'),
+    path('dashboard/<str:name>/<str:version>/info', views.dashboard_info, name='dashboard_info'),
     # Upload
     path('upload/results/<str:name>/<str:version>', views.upload_results, name='upload_results'),
     path('upload/testcases/<str:name>/<str:version>', views.upload_testcases, name='upload_testcases'),

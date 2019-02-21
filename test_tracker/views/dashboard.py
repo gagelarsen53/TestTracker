@@ -97,3 +97,44 @@ def dashboard_table(request, name, version):
     return render(request, "test_tracker/dashboard_table.html", context)
 
 
+def dashboard_info(request, name, version):
+    context = {
+        'got_product': False,
+        'test_cases': [],
+        'product': None,
+        'errors': []
+    }
+
+    # Get the Product
+    try:
+        context['product'] = Product.objects.get(
+            name=name,
+            version=version
+        )
+        context['got_product'] = True
+    except ObjectDoesNotExist:
+        context['errors'].append("Could not find product...")
+
+    # Get testcases
+    testcases = []
+    if context['product']:
+        testcases = context['product'].get_test_cases()
+
+    num_days = 5
+    testcases_and_results = [
+        {
+            'testcase': testcase,
+            'results': testcase.get_last_n_days_results(n_days=num_days, blanks=True)
+        }
+        for testcase in testcases
+        ]
+
+    # Calculate Information
+    active_test_cases = [x for x in testcases if x.active]
+    total_active_test_cases = len(active_test_cases)
+    print(total_active_test_cases)
+
+    return render(request, "test_tracker/dashboard_info.html", context)
+
+
+

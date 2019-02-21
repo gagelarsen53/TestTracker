@@ -63,7 +63,9 @@
                 </div>
             </div>
             <div id="info" class="tab-pane fade">
-
+                <div id="container">
+                    <img src="{% static 'img/loading.gif' %}">
+                </div>
             </div>
         </div>
     </div>
@@ -97,6 +99,24 @@
         }
       });
     });
+
+    function set_filters() {
+        // Populate From Local Storage
+        show_active_value = localStorage.getItem('show_active_value') == 'true' ? true : false;
+        $('#showInactiveCases').prop('checked', show_active_value);
+        toggle_view(".test-active-False", show_active_value);
+        show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
+        $('#showActions').prop('checked', show_actions_value);
+        toggle_view(".dashboard-actions", show_actions_value);
+    }
+    set_filters();
+
+    dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
+    if (dashboard_filter_string != '') {
+        text_box = $('#test-case-filter-text');
+        text_box.val(dashboard_filter_string);
+        $('#test-case-filter-text').keyup()
+    }
 
     // Create Product Buttons
     $(".create-product").modalForm({
@@ -150,21 +170,6 @@
 
     $(document).ready(function() {
 
-        // Populate From Local Storage
-        show_active_value = localStorage.getItem('show_active_value') == 'true' ? true : false;
-        $('#showInactiveCases').prop('checked', show_active_value);
-        toggle_view(".test-active-False", show_active_value);
-        show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
-        $('#showActions').prop('checked', show_actions_value);
-        toggle_view(".dashboard-actions", show_actions_value);
-
-        dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
-        if (dashboard_filter_string != '') {
-            text_box = $('#test-case-filter-text');
-            text_box.val(dashboard_filter_string);
-            $('#test-case-filter-text').keyup()
-        }
-
         $("#dashboard").load("{% url 'dashboard_table' product.name product.version %}", function() {
             $(".update-testcase").each(function () {
                 $(this).modalForm({formURL: $(this).data('id')});
@@ -183,9 +188,12 @@
                 var url = $(this).data('url')
                 $(this).modalForm({formURL: $(this).data('url')});
             });
+
+            // Populate From Local Storage
+            set_filters();
         });
 
-
+        $("#info").load("{% url 'dashboard_info' product.name product.version %}");
     });
 
 </script>
