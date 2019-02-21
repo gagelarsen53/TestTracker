@@ -15,6 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 from test_tracker.models.product import Product
+from test_tracker.models.test_status import TestStatus
 
 
 def dashboard(request, name, version):
@@ -129,10 +130,45 @@ def dashboard_info(request, name, version):
         for testcase in testcases
         ]
 
+    status_objects = TestStatus.objects.all().values('status')
+    statuses = [{x['status']: [z['results'][y][1] for z in testcases_and_results if z['results'][y][0] is not None and x['status'] == z['results'][y][0].status.status and z['testcase'].active]
+                 for x in status_objects} for y in range(0, num_days)]
+
     # Calculate Information
+    total_test_cases = len(testcases)
     active_test_cases = [x for x in testcases if x.active]
     total_active_test_cases = len(active_test_cases)
-    print(total_active_test_cases)
+
+    found_results = False
+    index = 0
+    while not found_results and index < num_days:
+        passing_test_case_count = len(statuses[index]['Pass'])
+        failing_test_case_count = len(statuses[index]['Fail'])
+        issue_test_case_count = len(statuses[index]['Issue'])
+        bug_test_case_count = len(statuses[index]['Bug'])
+        under_construction_test_case_count = len(statuses[index]['Under Construction'])
+        no_result_test_case_count = total_active_test_cases - (passing_test_case_count + failing_test_case_count + \
+                                                               issue_test_case_count + bug_test_case_count + \
+                                                               under_construction_test_case_count)
+
+        if passing_test_case_count > 0 or \
+              failing_test_case_count > 0 or \
+              issue_test_case_count > 0 or \
+              bug_test_case_count > 0 or \
+              under_construction_test_case_count > 0:
+            found_results = True
+            context['recent_result_date'] = datetime.date.today() - datetime.timedelta(days=index)
+
+        index += 1
+
+    context['total_test_case_count'] = total_test_cases
+    context['active_test_case_count'] = total_active_test_cases
+    context['passing_test_case_count'] = passing_test_case_count
+    context['failing_test_case_count'] = failing_test_case_count
+    context['issue_test_case_count'] = issue_test_case_count
+    context['bug_test_case_count'] = bug_test_case_count
+    context['under_construction_test_case_count'] = under_construction_test_case_count
+    context['no_result_test_case_count'] = no_result_test_case_count
 
     return render(request, "test_tracker/dashboard_info.html", context)
 

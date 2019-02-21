@@ -25,9 +25,11 @@
                 <button type="button" class="update-testcase btn btn-sm btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
+                <!-- Until we can find a better way to do this. Lets not make it an option...
                 <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
+                -->
             </div>
             {% endif %}
         </td>
