@@ -109,7 +109,7 @@ class TestCase(models.Model):
                 with open(_json_file, 'r') as jf:
                     data = json.load(jf)
             else:
-                date = json.load()
+                data = json.load(_json_file)
         except IOError:
             errors.append("Could not read file: {}".format(_json_file))
         except ValueError:
