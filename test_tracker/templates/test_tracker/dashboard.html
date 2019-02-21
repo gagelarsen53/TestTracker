@@ -118,15 +118,6 @@
         $('#test-case-filter-text').keyup()
     }
 
-    // Create Product Buttons
-    $(".create-product").modalForm({
-        formURL: "{% url 'create_product' %}"
-    });
-
-    $(".update-product").each(function () {
-        $(this).modalForm({formURL: $(this).data('id')});
-    });
-
     $(document).ready(function() {
         $(".create-testcase").modalForm({
             formURL: "{% url 'create_testcase' %}"
