@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Description</th>
-                        <td>{{ product.description }}</td>
+                        <td>{{ product.notes }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -63,6 +63,11 @@
                     </tr>
                 </tbody>
             </table>
+            {% if no_result_test_case_count > 0 %}
+                <div class="alert alert-danger">
+                    <strong>Note:</strong> Some tests do not have results...
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
