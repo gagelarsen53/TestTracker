@@ -1,9 +1,9 @@
 
 <table id="test-tracker-dashboard" class="table table-bordered test-tracker-dashboard">
     <thead>
-        <th class="sortable">Test Case</th>
         <th class="sortable">Category</th>
         <th class="sortable">Subcategory</th>
+        <th class="sortable">Test Case</th>
         {% if user.is_authenticated %}
         {% endif %}
         {% for date in dates %}
@@ -18,6 +18,8 @@
     <tbody id="dashboard-table">
     {% for case in testcases %}
     <tr class="test-active-{{ case.testcase.active }}">
+        <td>{{ case.testcase.category.category }}</td>
+        <td>{{ case.testcase.subcategory.subcategory }}</td>
         <td>
             {{ case.testcase.name }}
             {% if user.is_authenticated %}
@@ -33,8 +35,6 @@
             </div>
             {% endif %}
         </td>
-        <td>{{ case.testcase.category.category }}</td>
-        <td>{{ case.testcase.subcategory.subcategory }}</td>
         {% for r in case.results %}
             {% if r.0 %}
                 <td class="dashboard-status-cell" title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" bgcolor="{{ r.0.status.hex_color }}">
