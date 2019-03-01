@@ -8,8 +8,11 @@
         {% endif %}
         {% for date in dates %}
             <th class="sortable">{{ date }}
-                <button data-url="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="daily-stats btn btn-xs btn-info">
+                <button data-url="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="no-sort daily-stats btn btn-xs btn-info">
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                </button>
+                <button data-url="{% url 'delete_results_for_date' product.name product.version date.day date.month date.year %}" class="dashboard-actions result-delete-button no-sort btn btn-xs btn-info">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
             </th>
         {% endfor %}
@@ -23,10 +26,8 @@
         <td>
             {{ case.testcase.name }}
             {% if user.is_authenticated %}
-            <div class="dashboard-actions">
-                <button type="button" class="update-testcase btn btn-xs btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
+                <button type="button" class="dashboard-actions update-testcase btn btn-xs btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
                     <span class="glyphicon glyphicon-pencil"></span>
-                </button>
                 <!-- Until we can find a better way to do this. Lets not make it an option...
                 <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
                     <span class="glyphicon glyphicon-plus"></span>
@@ -62,6 +63,11 @@
         if (!this.asc){rows = rows.reverse()}
         for (var i = 0; i < rows.length; i++){table.append(rows[i])}
     })
+
+    $('button .no-sort').click(function() {
+        event.stopPropagation();
+    })
+
     function comparer(index) {
         return function(a, b) {
             var valA = getCellValue(a, index), valB = getCellValue(b, index)
@@ -71,4 +77,12 @@
     function getCellValue(row, index){
         return $(row).children('td').eq(index).text()
     }
+
+    $('.result-delete-button').click(function() {
+        x = confirm("Do you really want to delete?");
+        if (x)
+        {
+            window.location = $(this).data('url');
+        }
+    })
 </script>

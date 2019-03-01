@@ -10,6 +10,7 @@ from test_tracker.views.dashboard_overview import dashboard_overview
 from test_tracker.views.dashboard import dashboard
 from test_tracker.views.dashboard import dashboard_table
 from test_tracker.views.dashboard import dashboard_info
+from test_tracker.views.dashboard import delete_results_for_date
 from test_tracker.views.daily_stats import daily_stats
 from test_tracker.views.upload_results import upload_results
 from test_tracker.views.upload_testcases import upload_testcases

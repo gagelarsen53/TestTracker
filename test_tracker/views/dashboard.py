@@ -11,11 +11,15 @@ import base64
 import datetime
 import matplotlib.pyplot as plt
 
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 from test_tracker.models.product import Product
 from test_tracker.models.test_status import TestStatus
+from test_tracker.models.test_result import TestResult
 
 
 def dashboard(request, name, version):
@@ -172,5 +176,13 @@ def dashboard_info(request, name, version):
 
     return render(request, "test_tracker/dashboard_info.html", context)
 
+
+@login_required
+@transaction.atomic
+def delete_results_for_date(request, name, version, day, month, year):
+    product = Product.objects.get(name=name, version=version)
+    date = datetime.datetime(year=year, day=day, month=month)
+    results = TestResult.objects.filter(testcase__product=product, date=date).delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
