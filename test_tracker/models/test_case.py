@@ -85,7 +85,7 @@ class TestCase(models.Model):
         pass
 
     def __str__(self):
-        return "<TestCase: {}>".format(self.name)
+        return "{} - <{}>".format(self.name, self.product.get_product_string())
 
     @classmethod
     def test_cases_from_json_file(cls, _json_file):
