@@ -90,6 +90,11 @@ class TestResultUpdateView(PassRequestMixin, SuccessMessageMixin, generic.Update
             'version': product.version,
         })
 
+    def get_object(self, queryset=None):
+        hook = super(TestResultUpdateView, self).get_object(queryset)
+        hook.author = self.request.user
+        return hook
+
 
 class TestCategoryCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):
     template_name = 'test_tracker/create.html'
