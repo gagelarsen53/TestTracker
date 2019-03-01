@@ -105,16 +105,20 @@
         show_active_value = localStorage.getItem('show_active_value') == 'true' ? true : false;
         $('#showInactiveCases').prop('checked', show_active_value);
         toggle_view(".test-active-False", show_active_value);
+
         show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
         $('#showActions').prop('checked', show_actions_value);
         toggle_view(".dashboard-actions", show_actions_value);
+        
+        dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
+        $('#test-case-filter-text').val(dashboard_filter_string);
+        $('#test-case-filter-text').keyup()
     }
     set_filters();
 
     dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
     if (dashboard_filter_string != '') {
-        text_box = $('#test-case-filter-text');
-        text_box.val(dashboard_filter_string);
+        $('#test-case-filter-text').val(dashboard_filter_string);
         $('#test-case-filter-text').keyup()
     }
 
