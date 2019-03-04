@@ -21,10 +21,16 @@
                     </a></td>
                     <td>{{ product.test_case_count }}</td>
                     <td>
-                        <button type="button" class="update-product btn btn-sm btn-primary"
+                    {% if user.is_authenticated %}
+                        <button type="button" class="delete-product btn btn-sm btn-primary"
                                 data-id="{% url 'update_product' product.pk %}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </button>
+                        <button type="button" class="update-product btn btn-sm btn-danger"
+                                data-id="{% url 'delete_product' product.pk %}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -46,6 +52,9 @@
             formURL: "{% url 'create_product' %}"
         });
         $(".update-product").each(function () {
+            $(this).modalForm({formURL: $(this).data('id')});
+        });
+        $(".delete-product").each(function () {
             $(this).modalForm({formURL: $(this).data('id')});
         });
     });

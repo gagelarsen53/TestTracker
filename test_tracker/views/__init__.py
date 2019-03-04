@@ -16,10 +16,13 @@ from test_tracker.views.upload_results import upload_results
 from test_tracker.views.upload_testcases import upload_testcases
 from test_tracker.views.form_views import ProductCreateView
 from test_tracker.views.form_views import ProductUpdateView
+from test_tracker.views.form_views import ProductDeleteView
 from test_tracker.views.form_views import TestCaseCreateView
 from test_tracker.views.form_views import TestCaseUpdateView
+from test_tracker.views.form_views import TestCaseDeleteView
 from test_tracker.views.form_views import TestResultCreateView
 from test_tracker.views.form_views import TestResultUpdateView
+from test_tracker.views.form_views import TestResultDeleteView
 from test_tracker.views.form_views import TestCategoryCreateView
 from test_tracker.views.form_views import TestSubcategoryCreateView
 from test_tracker.views.form_views import TestStatusCreateView

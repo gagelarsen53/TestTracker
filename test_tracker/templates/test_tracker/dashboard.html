@@ -152,12 +152,17 @@
             $(".update-testcase").each(function () {
                 $(this).modalForm({formURL: $(this).data('id')});
             });
+            $(".delete-testcase").each(function () {
+                $(this).modalForm({formURL: $(this).data('url')});
+            });
 
             $(".create-testresult").modalForm({
                 formURL: "{% url 'create_result' %}"
             });
-
             $(".update-testresult").each(function () {
+                $(this).modalForm({formURL: $(this).data('id')});
+            });
+            $(".delete-testresult").each(function () {
                 $(this).modalForm({formURL: $(this).data('id')});
             });
 

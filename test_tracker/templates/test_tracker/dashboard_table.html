@@ -26,8 +26,14 @@
         <td>
             {{ case.testcase.name }}
             {% if user.is_authenticated %}
+                <div  style="float: right;">
                 <button type="button" class="dashboard-actions update-testcase btn btn-xs btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
                     <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button type="button" class="delete-testcase dashboard-actions btn btn-xs btn-danger" data-url="{% url 'delete_testcase' case.testcase.pk %}">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                </div>
                 <!-- Until we can find a better way to do this. Lets not make it an option...
                 <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
                     <span class="glyphicon glyphicon-plus"></span>
@@ -42,6 +48,9 @@
                     {% if user.is_authenticated %}
                     <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
                         {{ r.0.status.status }}
+                        <button type="button" class="delete-testcase dashboard-actions btn btn-xs btn-danger" data-url="{% url 'delete_testresult' r.0.pk %}" style="float: right;">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
                     </a>
                     {% else %}
                     {{ r.0.status.status }}
