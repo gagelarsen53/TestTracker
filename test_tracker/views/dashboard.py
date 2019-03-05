@@ -19,6 +19,7 @@ from django.shortcuts import render
 
 from test_tracker.models.product import Product
 from test_tracker.models.test_status import TestStatus
+from test_tracker.models.test_case import TestCase
 from test_tracker.models.test_result import TestResult
 
 
@@ -182,7 +183,29 @@ def dashboard_info(request, name, version):
 def delete_results_for_date(request, name, version, day, month, year):
     product = Product.objects.get(name=name, version=version)
     date = datetime.datetime(year=year, day=day, month=month)
-    results = TestResult.objects.filter(testcase__product=product, date=date).delete()
+    TestResult.objects.filter(testcase__product=product, date=date).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required
+@transaction.atomic
+def copy_result_to_current_date(request, name, version, day, month, year, pk):
+    product = Product.objects.get(name=name, version=version)
+    date = datetime.datetime(year=year, day=day, month=month)
+    current_date = datetime.date.today()
+    testcase = TestCase.objects.get(pk=pk)
+
+    copied_result = TestResult.objects.get(testcase__product=product, testcase=testcase, date=date)
+
+    try:
+        cur_result = TestResult.objects.get(testcase__product=product, testcase=testcase, date=current_date)
+        cur_result.status = copied_result.status
+        cur_result.note = copied_result.note + " (COPIED)"
+        cur_result.author = request.user
+    except ObjectDoesNotExist:
+        copied_result.pk = None
+        copied_result.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 

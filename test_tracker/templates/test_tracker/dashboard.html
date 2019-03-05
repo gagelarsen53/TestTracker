@@ -69,6 +69,12 @@
 </div>
 
 <script>
+    function uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
 
     function toggle_view(selector, checked_state) {
         $(selector).toggle(checked_state)
@@ -143,9 +149,14 @@
         });
     });
 
+    var contextMenuClone = undefined;
+
     $(document).ready(function() {
 
+
         $("#dashboard").load("{% url 'dashboard_table' product.name product.version %}", function() {
+
+            contextMenuClone = $("#contextMenu").clone();
             $(".update-testcase").each(function () {
                 $(this).modalForm({formURL: $(this).data('id')});
             });
@@ -172,7 +183,7 @@
 
 {% if user.is_authenticated %}
             $( "#dashboard-table tr td" ).contextmenu(function(e) {
-
+                $("#contextMenu").replaceWith(contextMenuClone.clone());
                 var rowOverlay = $('#rowOverlay');
                 var row = $(this).parent(".test-case-row");
                 var bottomWidth = row.css('width');
@@ -194,20 +205,26 @@
 
                 if (is_result) {
                     var delete_result_id = $(this).data("delete_url");
-                    $("#delete-testresult-context").data("id", delete_result_id);
                     var update_result_id = $(this).data("update_url");
-                    $("#update-testresult-context").data("id", update_result_id);
+                    var copy_result_to_current = $(this).data("copy_current_url");
 
-                    $(".update-testresult").modalForm({formURL: update_result_id});
-                    $(".delete-testresult").modalForm({formURL: delete_result_id});
+                    var x = $("#update-testresult-context")
+                    $("#update-testresult-context").modalForm({formURL: update_result_id});
+                    $("#delete-testresult-context").modalForm({formURL: delete_result_id});
+                    $('#copy-current-testresult-context').click(function() {
+                        x = confirm("Do you really want to copy result to current date?");
+                        if (x)
+                        {
+                            window.location = copy_result_to_current;
+                        }
+                    })
                 }
 
                 var delete_testcase_id = $(this).parent(".test-case-row").data("delete_url");
-                $("#delete-testcase-context").data("id", delete_testcase_id);
-                var update_testcase_id = $(this).parent(".test-case-row").data("update_url")
-                $("#update-testcase-context").data("id", update_testcase_id);
-                $(".update-testcase").modalForm({formURL: update_testcase_id});
-                $(".delete-testcase").modalForm({formURL: delete_testcase_id});
+                var update_testcase_id = $(this).parent(".test-case-row").data("update_url");
+
+                $("#update-testcase-context").modalForm({formURL: update_testcase_id});
+                $("#delete-testcase-context").modalForm({formURL: delete_testcase_id});
 
                 var sb = $("#sidebar");
                 var nb = $("#navbar");
@@ -222,12 +239,14 @@
                 if (!is_result) {
                     $("#delete-testresult-context").hide();
                     $("#update-testresult-context").hide();
+                    $("#copy-current-testresult-context").hide();
                     $("#divide-test-context").hide();
                 }
                 else
                 {
                     $("#delete-testresult-context").show();
                     $("#update-testresult-context").show();
+                    $("#copy-current-testresult-context").show();
                     $("#divide-test-context").show();
                 }
                 return false;
