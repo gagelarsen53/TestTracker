@@ -3,14 +3,11 @@
 {% block test_tracker_content %}
 {% load static %}
 <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
+    <div class="col-sm-3 col-md-2 sidebar" id="sidebar">
         <ul class="nav nav-sidebar">
 
             <li><h3>Filter Options:<h3></li>
             <li><input type="checkbox" id="showInactiveCases"> Show Inactive Test Cases</li>
-            {% if user.is_authenticated %}
-            <li><input type="checkbox" id="showActions"> Show Actions</li>
-            {% endif %}
             <li><input id="test-case-filter-text" type="text" placeholder="Search..."></li>
             {% if user.is_authenticated %}
                 <li><h3>Actions:<h3></li>
@@ -106,9 +103,9 @@
         $('#showInactiveCases').prop('checked', show_active_value);
         toggle_view(".test-active-False", show_active_value);
 
-        show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
-        $('#showActions').prop('checked', show_actions_value);
-        toggle_view(".dashboard-actions", show_actions_value);
+        // show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
+        // $('#showActions').prop('checked', show_actions_value);
+        // toggle_view(".dashboard-actions", show_actions_value);
         
         dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
         $('#test-case-filter-text').val(dashboard_filter_string);
@@ -153,7 +150,7 @@
                 $(this).modalForm({formURL: $(this).data('id')});
             });
             $(".delete-testcase").each(function () {
-                $(this).modalForm({formURL: $(this).data('url')});
+                $(this).modalForm({formURL: $(this).data('id')});
             });
 
             $(".create-testresult").modalForm({
@@ -170,14 +167,86 @@
                 var t = $(this)
                 var url = $(this).data('url')
                 $(this).modalForm({formURL: $(this).data('url')});
+            })
+            ;
+
+{% if user.is_authenticated %}
+            $( "#dashboard-table tr td" ).contextmenu(function(e) {
+
+                var rowOverlay = $('#rowOverlay');
+                var row = $(this).parent(".test-case-row");
+                var bottomWidth = row.css('width');
+                var bottomHeight = row.css('height');
+                var rowPos = row.position();
+                bottomTop = rowPos.top;
+                bottomLeft = rowPos.left;
+                rowOverlay.css({
+                  position: 'absolute',
+                  top: bottomTop,
+                  left: bottomLeft,
+                  width: bottomWidth,
+                  height: bottomHeight
+                });
+                rowOverlay.show();
+
+                // Update URLS
+                var is_result = $(this).closest(".dashboard-status-cell").length;
+
+                if (is_result) {
+                    var delete_result_id = $(this).data("delete_url");
+                    $("#delete-testresult-context").data("id", delete_result_id);
+                    var update_result_id = $(this).data("update_url");
+                    $("#update-testresult-context").data("id", update_result_id);
+
+                    $(".update-testresult").modalForm({formURL: update_result_id});
+                    $(".delete-testresult").modalForm({formURL: delete_result_id});
+                }
+
+                var delete_testcase_id = $(this).parent(".test-case-row").data("delete_url");
+                $("#delete-testcase-context").data("id", delete_testcase_id);
+                var update_testcase_id = $(this).parent(".test-case-row").data("update_url")
+                $("#update-testcase-context").data("id", update_testcase_id);
+                $(".update-testcase").modalForm({formURL: update_testcase_id});
+                $(".delete-testcase").modalForm({formURL: delete_testcase_id});
+
+                var sb = $("#sidebar");
+                var nb = $("#navbar");
+                var sb_width = sb["0"].clientWidth;  // sidebar width
+                var nb_height = nb["0"].clientHeight + 20;  // Navbar height plus padding
+                $("#contextMenu").css({
+                   display: "block",
+                   left: e.pageX - sb_width,
+                   top: e.pageY - nb_height
+                });
+
+                if (!is_result) {
+                    $("#delete-testresult-context").hide();
+                    $("#update-testresult-context").hide();
+                    $("#divide-test-context").hide();
+                }
+                else
+                {
+                    $("#delete-testresult-context").show();
+                    $("#update-testresult-context").show();
+                    $("#divide-test-context").show();
+                }
+                return false;
             });
 
             // Populate From Local Storage
             set_filters();
+{% endif %}
+        });
+
+        $('body').click(function () {
+            $("#rowOverlay").hide();
+            $("#contextMenu").hide();
         });
 
         $("#info").load("{% url 'dashboard_info' product.name product.version %}");
+
     });
+
 </script>
 
 {% endblock %}

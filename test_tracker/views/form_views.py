@@ -118,7 +118,7 @@ class TestResultDeleteView(PassRequestMixin, SuccessMessageMixin, generic.Delete
     model = TestResult
     template_name = 'test_tracker/delete.html'
     def get_success_url(self):
-        product = self.get_context_data()['testcase'].product
+        product = self.get_context_data()['testresult'].testcase.product
         return reverse_lazy('dashboard', kwargs={
             'name': product.name,
             'version': product.version,
