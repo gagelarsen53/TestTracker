@@ -193,18 +193,25 @@ def copy_result_to_current_date(request, name, version, day, month, year, pk):
     product = Product.objects.get(name=name, version=version)
     date = datetime.datetime(year=year, day=day, month=month)
     current_date = datetime.date.today()
-    testcase = TestCase.objects.get(pk=pk)
-
-    copied_result = TestResult.objects.get(testcase__product=product, testcase=testcase, date=date)
+    copied_result = TestResult.objects.get(testcase__product=product, pk=pk, date=date)
+    testcase = copied_result.testcase
+    note = copied_result.note + " (COPIED)"
 
     try:
         cur_result = TestResult.objects.get(testcase__product=product, testcase=testcase, date=current_date)
         cur_result.status = copied_result.status
-        cur_result.note = copied_result.note + " (COPIED)"
+        cur_result.note = note
         cur_result.author = request.user
+        cur_result.save()
     except ObjectDoesNotExist:
-        copied_result.pk = None
-        copied_result.save()
+        new_result = TestResult(
+            date=current_date,
+            status=copied_result.status,
+            author=request.user,
+            testcase=testcase,
+            note=note,
+        )
+        new_result.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
