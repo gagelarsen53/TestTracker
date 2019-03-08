@@ -88,7 +88,13 @@ def dashboard_table(request, name, version):
     if context['product']:
         testcases = context['product'].get_test_cases()
 
-    num_days = 5
+    request_days = request.GET.get("days", 5)
+    try:
+        num_days = int(request_days)
+    except:
+        num_days = 5
+
+
     context['testcases'] = [
         {
             'testcase': testcase,
