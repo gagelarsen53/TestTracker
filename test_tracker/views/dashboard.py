@@ -94,17 +94,17 @@ def dashboard_table(request, name, version):
     except:
         num_days = 5
 
+    request_show_blanks = request.GET.get("show_empty_days", False)
 
     context['testcases'] = [
         {
             'testcase': testcase,
-            'results': testcase.get_last_n_days_results(n_days=num_days, blanks=True)
+            'results': testcase.get_last_n_days_results(n_days=num_days, blanks=request_show_blanks)
         }
         for testcase in testcases
         ]
 
-    today = datetime.date.today()
-    context['dates'] = [today - datetime.timedelta(i) for i in range(num_days)]
+    context['dates'] = [result[1] for result in context['testcases'][0]['results']]
 
     return render(request, "test_tracker/dashboard_table.html", context)
 

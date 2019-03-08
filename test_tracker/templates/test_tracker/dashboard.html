@@ -11,7 +11,7 @@
             <li><input id="test-case-filter-text" type="text" placeholder="Search..."></li>
 
             <li><h3>Expand View:</h3></li>
-            <li><input type="number" id="dayCount" value="5" min=1 max=30 style="width: 50px;"> Number of Days</li>
+            <li>Last <input type="number" id="dayCount" value="5" min=1 max=30 style="width: 50px;"> Days</li>
             <li><input type="checkbox" id="showEmptyDays"> Show Days with No Results</li>
             <li>
                 <button class="update-dashboard-view btn btn-xs btn-info">
@@ -89,6 +89,22 @@
                 number_of_days = Number(number_of_days_string, 10);
                 dashboard_url += "?days=" + number_of_days;
                 had_days = true;
+            }
+
+            empty_days = $("#showEmptyDays")[0];
+            localStorage.setItem("show_empty_days", empty_days.checked);
+            var show_empty = empty_days.checked
+            if (show_empty)
+            {
+                if (had_days)
+                {
+                    dashboard_url += "&";
+                }
+                else
+                {
+                    dashboard_url += "?";
+                }
+                dashboard_url += "show_empty_days=True"
             }
 
             $("#dashboard").load(dashboard_url, function() {
@@ -238,6 +254,9 @@
 
         number_of_days_string = localStorage.getItem('number_of_days_string') || 5;
         $('#dayCount').val(number_of_days_string);
+
+        show_empty_days = localStorage.getItem('show_empty_days') == 'true' ? true : false;
+        $('#showEmptyDays').prop('checked', show_empty_days);
     }
     set_filters();
 
@@ -289,6 +308,7 @@
     $('.update-dashboard-view').click(function() {
         number_of_days_string = Number($('#dayCount').val(), 10) || 5;
         localStorage.setItem('number_of_days_string', number_of_days_string);
+
         url = "{% url 'dashboard_table' product.name product.version %}";
         load_dashboard(url);
     })
