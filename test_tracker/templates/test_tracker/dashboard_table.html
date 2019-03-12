@@ -71,7 +71,7 @@
         {% for r in case.results %}
             {% if r.0 %}
                 <td class="dashboard-status-cell" title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}"
-                    bgcolor="{{ r.0.status.hex_color }}" data-update_url="{% url 'update_result' r.0.pk %}"
+                    style='color: {{ r.0.status.text_hex_color }};' bgcolor="{{ r.0.status.hex_color }}" data-update_url="{% url 'update_result' r.0.pk %}"
                     data-copy_current_url="{% url 'copy_result_to_current_date' product.name product.version r.0.date.day r.0.date.month r.0.date.year r.0.pk %}"
                     data-delete_url="{% url 'delete_testresult' r.0.pk %}">
                     {% if user.is_authenticated %}
