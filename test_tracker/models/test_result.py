@@ -66,7 +66,6 @@ class TestResult(models.Model):
 
         root = tree.getroot()
         nodes = root.findall('./Node/Node')
-        print(len(nodes))
         tests = {}
         for node in nodes:
             prps = node.findall('./Prp')

@@ -84,10 +84,6 @@ def dashboard_table(request, name, version):
         context['errors'].append("Could not find product...")
 
     # Get testcases
-    testcases = []
-    if context['product']:
-        testcases = context['product'].get_test_cases()
-
     request_days = request.GET.get("days", 5)
     try:
         num_days = int(request_days)
@@ -95,15 +91,9 @@ def dashboard_table(request, name, version):
         num_days = 5
 
     request_show_blanks = request.GET.get("show_empty_days", False)
+    tcs = context['product'].get_last_n_days_results(n_days=num_days, blanks=request_show_blanks)
 
-    context['testcases'] = [
-        {
-            'testcase': testcase,
-            'results': testcase.get_last_n_days_results(n_days=num_days, blanks=request_show_blanks)
-        }
-        for testcase in testcases
-        ]
-
+    context['testcases'] = tcs
     context['dates'] = [result[1] for result in context['testcases'][0]['results']]
 
     return render(request, "test_tracker/dashboard_table.html", context)

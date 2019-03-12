@@ -91,9 +91,6 @@ class TestResultCreateView(PassRequestMixin, SuccessMessageMixin, generic.Create
             'version': product.version,
         })
 
-    def get_initial(self):
-        print(self.request)
-
 
 class TestResultUpdateView(PassRequestMixin, SuccessMessageMixin, generic.UpdateView):
     model = TestResult
