@@ -81,7 +81,7 @@ class TestResult(models.Model):
             if not name or not status:
                 continue
 
-            test_name_re = r'Script Test Log \[[A-Za-z_]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
+            test_name_re = r'.*?\[Script\\.*? - (?:[Tt]est_)?([A-Za-z0-9_]*)\]'
             test_name_re_old = r'Script Test Log \[[A-Za-z_]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
             test_name_search = re.search(test_name_re, name)
             if not test_name_search:
