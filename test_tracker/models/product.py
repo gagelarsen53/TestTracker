@@ -6,6 +6,7 @@
 * Copyright: (c) GLD
 ********************************************************************************
 """
+import datetime
 import logging
 
 from django.db import models
@@ -54,6 +55,26 @@ class Product(models.Model):
             date=result_date
         )
         return [x for x in results]
+
+    def get_last_n_days_results(self, n_days=30, blanks=False):
+        test_cases = [{'testcase': x, 'results': x.get_last_n_days_results(n_days=n_days, blanks=True)}
+                      for x in self.get_test_cases()]
+
+        dates_with_results = set()
+
+        def add_date(x):
+            if x[0]:  # Test Result
+                dates_with_results.add(x[1])  # Add the date
+
+        for tc in test_cases:
+            for tr in tc['results']:
+                add_date(tr)
+
+        if not blanks:
+            for tc in test_cases:
+                tc['results'] = [x for x in tc['results'] if x[1] in dates_with_results]
+        return test_cases
+
 
     def get_json(self):
         raise NotImplementedError("get_json function not yet implemented for product object")

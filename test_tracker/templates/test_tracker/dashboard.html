@@ -3,15 +3,22 @@
 {% block test_tracker_content %}
 {% load static %}
 <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
+    <div class="col-sm-3 col-md-2 sidebar" id="sidebar">
         <ul class="nav nav-sidebar">
 
             <li><h3>Filter Options:<h3></li>
             <li><input type="checkbox" id="showInactiveCases"> Show Inactive Test Cases</li>
-            {% if user.is_authenticated %}
-            <li><input type="checkbox" id="showActions"> Show Actions</li>
-            {% endif %}
             <li><input id="test-case-filter-text" type="text" placeholder="Search..."></li>
+
+            <li><h3>Expand View:</h3></li>
+            <li>Last <input type="number" id="dayCount" value="5" min=1 max=30 style="width: 50px;"> Days</li>
+            <li><input type="checkbox" id="showEmptyDays"> Show Days with No Results</li>
+            <li>
+                <button class="update-dashboard-view btn btn-xs btn-info">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh View
+                </button>
+            </li>
+
             {% if user.is_authenticated %}
                 <li><h3>Actions:<h3></li>
                 <li class="dashboard-action-button">
@@ -73,6 +80,137 @@
 
 <script>
 
+    function load_dashboard(dashboard_url) {
+
+            var had_days = false;
+            if (localStorage.getItem('number_of_days_string'))
+            {
+                number_of_days_string = localStorage.getItem('number_of_days_string');
+                number_of_days = Number(number_of_days_string, 10);
+                dashboard_url += "?days=" + number_of_days;
+                had_days = true;
+            }
+
+            empty_days = $("#showEmptyDays")[0];
+            localStorage.setItem("show_empty_days", empty_days.checked);
+            var show_empty = empty_days.checked
+            if (show_empty)
+            {
+                if (had_days)
+                {
+                    dashboard_url += "&";
+                }
+                else
+                {
+                    dashboard_url += "?";
+                }
+                dashboard_url += "show_empty_days=True"
+            }
+
+            $("#dashboard").load(dashboard_url, function() {
+
+            contextMenuClone = $("#contextMenu").clone();
+            $(".update-testcase").each(function () {
+                $(this).modalForm({formURL: $(this).data('id')});
+            });
+            $(".delete-testcase").each(function () {
+                $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+            $(".create-testresult").modalForm({
+                formURL: "{% url 'create_result' %}"
+            });
+            $(".update-testresult").each(function () {
+                $(this).modalForm({formURL: $(this).data('id')});
+            });
+            $(".delete-testresult").each(function () {
+                $(this).modalForm({formURL: $(this).data('id')});
+            });
+
+            $(".daily-stats").each(function () {
+                var t = $(this)
+                var url = $(this).data('url')
+                $(this).modalForm({formURL: $(this).data('url')});
+            })
+            ;
+
+{% if user.is_authenticated %}
+            $( "#dashboard-table tr td" ).contextmenu(function(e) {
+                $("#contextMenu").replaceWith(contextMenuClone.clone());
+                var rowOverlay = $('#rowOverlay');
+                var row = $(this).parent(".test-case-row");
+                var bottomWidth = row.css('width');
+                var bottomHeight = row.css('height');
+                var rowPos = row.position();
+                bottomTop = rowPos.top;
+                bottomLeft = rowPos.left;
+                rowOverlay.css({
+                  position: 'absolute',
+                  top: bottomTop,
+                  left: bottomLeft,
+                  width: bottomWidth,
+                  height: bottomHeight
+                });
+                rowOverlay.show();
+
+                // Update URLS
+                var is_result = $(this).closest(".dashboard-status-cell").length;
+
+                if (is_result) {
+                    var delete_result_id = $(this).data("delete_url");
+                    var update_result_id = $(this).data("update_url");
+                    var copy_result_to_current = $(this).data("copy_current_url");
+
+                    var x = $("#update-testresult-context")
+                    $("#update-testresult-context").modalForm({formURL: update_result_id});
+                    $("#delete-testresult-context").modalForm({formURL: delete_result_id});
+                    $('#copy-current-testresult-context').click(function() {
+                        x = confirm("Do you really want to copy result to current date?");
+                        if (x)
+                        {
+                            window.location = copy_result_to_current;
+                        }
+                    })
+                }
+
+                var delete_testcase_id = $(this).parent(".test-case-row").data("delete_url");
+                var update_testcase_id = $(this).parent(".test-case-row").data("update_url");
+
+                $("#update-testcase-context").modalForm({formURL: update_testcase_id});
+                $("#delete-testcase-context").modalForm({formURL: delete_testcase_id});
+
+                var sb = $("#sidebar");
+                var nb = $("#navbar");
+                var sb_width = sb["0"].clientWidth;  // sidebar width
+                var nb_height = nb["0"].clientHeight + 20;  // Navbar height plus padding
+                $("#contextMenu").css({
+                   display: "block",
+                   left: e.pageX - sb_width,
+                   top: e.pageY - nb_height
+                });
+
+                if (!is_result) {
+                    $("#delete-testresult-context").hide();
+                    $("#update-testresult-context").hide();
+                    $("#copy-current-testresult-context").hide();
+                    $("#divide-test-context").hide();
+                }
+                else
+                {
+                    $("#delete-testresult-context").show();
+                    $("#update-testresult-context").show();
+                    $("#copy-current-testresult-context").show();
+                    $("#divide-test-context").show();
+                }
+                return false;
+            });
+
+            // Populate From Local Storage
+            set_filters();
+{% endif %}
+        });
+    }
+
     function toggle_view(selector, checked_state) {
         $(selector).toggle(checked_state)
     }
@@ -105,16 +243,26 @@
         show_active_value = localStorage.getItem('show_active_value') == 'true' ? true : false;
         $('#showInactiveCases').prop('checked', show_active_value);
         toggle_view(".test-active-False", show_active_value);
-        show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
-        $('#showActions').prop('checked', show_actions_value);
-        toggle_view(".dashboard-actions", show_actions_value);
+
+        // show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
+        // $('#showActions').prop('checked', show_actions_value);
+        // toggle_view(".dashboard-actions", show_actions_value);
+        
+        dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
+        $('#test-case-filter-text').val(dashboard_filter_string);
+        $('#test-case-filter-text').keyup();
+
+        number_of_days_string = localStorage.getItem('number_of_days_string') || 5;
+        $('#dayCount').val(number_of_days_string);
+
+        show_empty_days = localStorage.getItem('show_empty_days') == 'true' ? true : false;
+        $('#showEmptyDays').prop('checked', show_empty_days);
     }
     set_filters();
 
     dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
     if (dashboard_filter_string != '') {
-        text_box = $('#test-case-filter-text');
-        text_box.val(dashboard_filter_string);
+        $('#test-case-filter-text').val(dashboard_filter_string);
         $('#test-case-filter-text').keyup()
     }
 
@@ -142,33 +290,28 @@
         });
     });
 
+    var contextMenuClone = undefined;
+
     $(document).ready(function() {
 
-        $("#dashboard").load("{% url 'dashboard_table' product.name product.version %}", function() {
-            $(".update-testcase").each(function () {
-                $(this).modalForm({formURL: $(this).data('id')});
-            });
-
-            $(".create-testresult").modalForm({
-                formURL: "{% url 'create_result' %}"
-            });
-
-            $(".update-testresult").each(function () {
-                $(this).modalForm({formURL: $(this).data('id')});
-            });
-
-            $(".daily-stats").each(function () {
-                var t = $(this)
-                var url = $(this).data('url')
-                $(this).modalForm({formURL: $(this).data('url')});
-            });
-
-            // Populate From Local Storage
-            set_filters();
-        });
 
         $("#info").load("{% url 'dashboard_info' product.name product.version %}");
+        load_dashboard("{% url 'dashboard_table' product.name product.version %}");
+
+        $('body').click(function () {
+            $("#rowOverlay").hide();
+            $("#contextMenu").hide();
+        });
+
     });
+
+    $('.update-dashboard-view').click(function() {
+        number_of_days_string = Number($('#dayCount').val(), 10) || 5;
+        localStorage.setItem('number_of_days_string', number_of_days_string);
+
+        url = "{% url 'dashboard_table' product.name product.version %}";
+        load_dashboard(url);
+    })
 
 </script>
 

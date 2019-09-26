@@ -37,4 +37,4 @@ class TestStatus(models.Model):
         return "<TestStatus>{}</TestStatus>".format(self.status)
 
     def __str__(self):
-        return "<TestStatus: {}>".format(self.status)
+        return "{}".format(self.status)

@@ -11,11 +11,16 @@ import base64
 import datetime
 import matplotlib.pyplot as plt
 
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 from test_tracker.models.product import Product
 from test_tracker.models.test_status import TestStatus
+from test_tracker.models.test_case import TestCase
+from test_tracker.models.test_result import TestResult
 
 
 def dashboard(request, name, version):
@@ -79,21 +84,17 @@ def dashboard_table(request, name, version):
         context['errors'].append("Could not find product...")
 
     # Get testcases
-    testcases = []
-    if context['product']:
-        testcases = context['product'].get_test_cases()
+    request_days = request.GET.get("days", 5)
+    try:
+        num_days = int(request_days)
+    except:
+        num_days = 5
 
-    num_days = 5
-    context['testcases'] = [
-        {
-            'testcase': testcase,
-            'results': testcase.get_last_n_days_results(n_days=num_days, blanks=True)
-        }
-        for testcase in testcases
-        ]
+    request_show_blanks = request.GET.get("show_empty_days", False)
+    tcs = context['product'].get_last_n_days_results(n_days=num_days, blanks=request_show_blanks)
 
-    today = datetime.date.today()
-    context['dates'] = [today - datetime.timedelta(i) for i in range(num_days)]
+    context['testcases'] = tcs
+    context['dates'] = [result[1] for result in context['testcases'][0]['results']]
 
     return render(request, "test_tracker/dashboard_table.html", context)
 
@@ -171,6 +172,43 @@ def dashboard_info(request, name, version):
     context['no_result_test_case_count'] = no_result_test_case_count
 
     return render(request, "test_tracker/dashboard_info.html", context)
+
+
+@login_required
+@transaction.atomic
+def delete_results_for_date(request, name, version, day, month, year):
+    product = Product.objects.get(name=name, version=version)
+    date = datetime.datetime(year=year, day=day, month=month)
+    TestResult.objects.filter(testcase__product=product, date=date).delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required
+@transaction.atomic
+def copy_result_to_current_date(request, name, version, day, month, year, pk):
+    product = Product.objects.get(name=name, version=version)
+    date = datetime.datetime(year=year, day=day, month=month)
+    current_date = datetime.date.today()
+    copied_result = TestResult.objects.get(testcase__product=product, pk=pk, date=date)
+    testcase = copied_result.testcase
+    note = copied_result.note + " (COPIED)"
+
+    try:
+        cur_result = TestResult.objects.get(testcase__product=product, testcase=testcase, date=current_date)
+        cur_result.status = copied_result.status
+        cur_result.note = note
+        cur_result.author = request.user
+        cur_result.save()
+    except ObjectDoesNotExist:
+        new_result = TestResult(
+            date=current_date,
+            status=copied_result.status,
+            author=request.user,
+            testcase=testcase,
+            note=note,
+        )
+        new_result.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 

@@ -7,6 +7,7 @@
 ********************************************************************************
 """
 from io import BytesIO
+import numpy as np
 import base64
 import datetime
 import matplotlib.pyplot as plt
@@ -49,8 +50,13 @@ def daily_stats(request, name, version, day, month, year):
     fig1, ax1 = plt.subplots()
     total = sum(sizes)/100.0
     autopct = lambda x: "%d" % round(x*total)
-    ax1.pie(sizes, labels=labels, shadow=False, startangle=90, colors=colors, autopct=autopct)
-    ax1.axis('equal')
+
+    plt.xticks(np.arange(len(labels)), labels)
+    b = ax1.bar(np.arange(len(labels)), sizes, align='center', alpha=0.5, color=colors)
+    plt.legend([b], labels)
+
+    # ax1.pie(sizes, labels=labels, shadow=False, startangle=90, colors=colors, autopct=autopct)
+    # ax1.axis('equal')
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png')

@@ -16,6 +16,11 @@ urlpatterns = [
     # Statistics
     path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>',
          views.daily_stats, name='daily_stats'),
+    # Delete All For Date
+    path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>/delete',
+         views.delete_results_for_date, name='delete_results_for_date'),
+    path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>/copy/<int:pk>',
+         views.copy_result_to_current_date, name='copy_result_to_current_date'),
     # Dashboard
     path('dashboard/<str:name>/<str:version>', views.dashboard, name='dashboard'),
     path('dashboard/<str:name>/<str:version>/table', views.dashboard_table, name='dashboard_table'),
@@ -34,4 +39,8 @@ urlpatterns = [
     path('update/product/<int:pk>', views.ProductUpdateView.as_view(), name='update_product'),
     path('update/testcase/<int:pk>', views.TestCaseUpdateView.as_view(), name='update_testcase'),
     path('update/result/<int:pk>', views.TestResultUpdateView.as_view(), name='update_result'),
+    # Delete
+    path('delete/product/<int:pk>', views.ProductDeleteView.as_view(), name='delete_product'),
+    path('delete/testcase/<int:pk>', views.TestCaseDeleteView.as_view(), name='delete_testcase'),
+    path('delete/result/<int:pk>', views.TestResultDeleteView.as_view(), name='delete_testresult'),
 ]

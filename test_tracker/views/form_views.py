@@ -34,11 +34,29 @@ class ProductUpdateView(PassRequestMixin, SuccessMessageMixin, generic.UpdateVie
     success_url = reverse_lazy('index')
 
 
+class ProductDeleteView(PassRequestMixin, SuccessMessageMixin, generic.DeleteView):
+    model = Product
+    template_name = 'test_tracker/delete.html'
+    success_message = 'Success: Product was deleted.'
+    success_url = reverse_lazy('index')
+
+
 class TestCaseCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):
     template_name = 'test_tracker/create.html'
     form_class = TestCaseForm
     success_message = 'Success: TestCase was created.'
 
+    def get_success_url(self):
+        product = self.get_context_data()['testcase'].product
+        return reverse_lazy('dashboard', kwargs={
+            'name': product.name,
+            'version': product.version,
+        })
+
+
+class TestCaseDeleteView(PassRequestMixin, SuccessMessageMixin, generic.DeleteView):
+    model = TestCase
+    template_name = 'test_tracker/delete.html'
     def get_success_url(self):
         product = self.get_context_data()['testcase'].product
         return reverse_lazy('dashboard', kwargs={
@@ -73,9 +91,6 @@ class TestResultCreateView(PassRequestMixin, SuccessMessageMixin, generic.Create
             'version': product.version,
         })
 
-    def get_initial(self):
-        print(self.request)
-
 
 class TestResultUpdateView(PassRequestMixin, SuccessMessageMixin, generic.UpdateView):
     model = TestResult
@@ -83,6 +98,22 @@ class TestResultUpdateView(PassRequestMixin, SuccessMessageMixin, generic.Update
     form_class = TestResultForm
     success_message = 'Success: TestResult was updated.'
 
+    def get_success_url(self):
+        product = self.get_context_data()['testresult'].testcase.product
+        return reverse_lazy('dashboard', kwargs={
+            'name': product.name,
+            'version': product.version,
+        })
+
+    def get_object(self, queryset=None):
+        hook = super(TestResultUpdateView, self).get_object(queryset)
+        hook.author = self.request.user
+        return hook
+        
+
+class TestResultDeleteView(PassRequestMixin, SuccessMessageMixin, generic.DeleteView):
+    model = TestResult
+    template_name = 'test_tracker/delete.html'
     def get_success_url(self):
         product = self.get_context_data()['testresult'].testcase.product
         return reverse_lazy('dashboard', kwargs={

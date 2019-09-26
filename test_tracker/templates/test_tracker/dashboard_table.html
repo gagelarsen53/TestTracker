@@ -1,59 +1,101 @@
+<style>
+    #contextMenu {
+      position: absolute;
+    }
+     #rowOverlay {
+       display: none;
+       background-color: Silver;
+       text-align: center;
+       position: absolute;
+       opacity: 0.5;
+     }
+</style>
+
+{% if user.is_authenticated %}
+<ul id="contextMenu" class="dropdown-menu" role="menu">
+    <li><a id="delete-testresult-context" class="context-menu-list delete-testresult" tabindex="-1"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete Result</a></li>
+    <li><a id="update-testresult-context" class="context-menu-list update-testresult" tabindex="-1"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit Result</a></li>
+    <li><a id="copy-current-testresult-context" class="context-menu-list copy-testresult" tabindex="-1"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span> Copy Result to Current</a></li>
+    <li id="divide-test-context" class="divider"></li>
+    <li><a id="delete-testcase-context" class="context-menu-list delete-testcase" tabindex="-1"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete Test</a></li>
+    <li><a id="update-testcase-context" class="context-menu-list update-testcase" tabindex="-1"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit Test</a></li>
+</ul>
+{% endif %}
+
 
 <table id="test-tracker-dashboard" class="table table-bordered test-tracker-dashboard">
     <thead>
         <th class="sortable">Category</th>
         <th class="sortable">Subcategory</th>
         <th class="sortable">Test Case</th>
-        {% if user.is_authenticated %}
-        {% endif %}
         {% for date in dates %}
             <th class="sortable">{{ date }}
-                <button data-url="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="daily-stats btn btn-xs btn-info">
+                <button data-url="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="no-sort daily-stats btn btn-xs btn-info">
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                 </button>
+                {% if user.is_authenticated %}
+                <button data-url="{% url 'delete_results_for_date' product.name product.version date.day date.month date.year %}" class="dashboard-actions result-delete-button no-sort btn btn-xs btn-info">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                {% endif %}
             </th>
         {% endfor %}
     </thead>
 
     <tbody id="dashboard-table">
     {% for case in testcases %}
-    <tr class="test-active-{{ case.testcase.active }}">
+    <tr class="test-case-row test-active-{{ case.testcase.active }}"
+        data-delete_url="{% url 'delete_testcase' case.testcase.pk %}"
+        data-update_url="{% url 'update_testcase' case.testcase.pk %}">
         <td>{{ case.testcase.category.category }}</td>
         <td>{{ case.testcase.subcategory.subcategory }}</td>
         <td>
             {{ case.testcase.name }}
             {% if user.is_authenticated %}
-            <div class="dashboard-actions">
-                <button type="button" class="update-testcase btn btn-xs btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
+                <!--
+                <div  style="float: right;">
+                <button type="button" class="dashboard-actions update-testcase btn btn-xs btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
-                <!-- Until we can find a better way to do this. Lets not make it an option...
+                <button type="button" class="delete-testcase dashboard-actions btn btn-xs btn-danger" data-id="{% url 'delete_testcase' case.testcase.pk %}">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                </div> Until we can find a better way to do this. Lets not make it an option...
                 <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
-                -->
             </div>
+                -->
             {% endif %}
         </td>
         {% for r in case.results %}
             {% if r.0 %}
-                <td class="dashboard-status-cell" title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" bgcolor="{{ r.0.status.hex_color }}">
+                <td class="dashboard-status-cell" title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}"
+                    style='color: {{ r.0.status.text_hex_color }};' bgcolor="{{ r.0.status.hex_color }}" data-update_url="{% url 'update_result' r.0.pk %}"
+                    data-copy_current_url="{% url 'copy_result_to_current_date' product.name product.version r.0.date.day r.0.date.month r.0.date.year r.0.pk %}"
+                    data-delete_url="{% url 'delete_testresult' r.0.pk %}">
                     {% if user.is_authenticated %}
                     <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
                         {{ r.0.status.status }}
                     </a>
+                    <!--
+                    <button type="button" class="delete-testcase dashboard-actions btn btn-xs btn-danger" data-id="{% url 'delete_testresult' r.0.pk %}" style="float: right;">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                    -->
                     {% else %}
                     {{ r.0.status.status }}
                     {% endif %}
                 </td>
             {% else %}
-                <td></td>
+                <td style="bgcolor: #d4d6d8;"></td>
             {% endif %}
         {% endfor %}
     </tr>
     {% endfor %}
     </tbody>
 </table>
+<div id="rowOverlay"></div>
 <script>
     $('th').click(function(){
         var table = $(this).parents('thead').eq(0).parents('table').eq(0)
@@ -62,6 +104,11 @@
         if (!this.asc){rows = rows.reverse()}
         for (var i = 0; i < rows.length; i++){table.append(rows[i])}
     })
+
+    $('button .no-sort').click(function() {
+        event.stopPropagation();
+    })
+
     function comparer(index) {
         return function(a, b) {
             var valA = getCellValue(a, index), valB = getCellValue(b, index)
@@ -71,4 +118,12 @@
     function getCellValue(row, index){
         return $(row).children('td').eq(index).text()
     }
+
+    $('.result-delete-button').click(function() {
+        x = confirm("Do you really want to delete?");
+        if (x)
+        {
+            window.location = $(this).data('url');
+        }
+    })
 </script>

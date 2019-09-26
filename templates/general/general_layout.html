@@ -68,7 +68,7 @@
                 </div>
                 {% else %}
                 <div style="color: white; padding-top: 15px; padding-bottom: 15px; padding-right: 25px;">
-                    {{ user.email }} [ <a href="{% url 'logout' %}">logout</a> ]
+                    {{ user.username }} [ <a href="{% url 'logout' %}">logout</a> ]
                 </div>
                 {% endif %}
             </form>
