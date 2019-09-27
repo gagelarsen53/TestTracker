@@ -220,7 +220,7 @@
         localStorage.setItem("show_active_value", this.checked);
     });
 
-    $('#showActions').click(function() {
+    $('.showActions').click(function() {
         toggle_view(".dashboard-actions", this.checked);
         localStorage.setItem("show_actions_value", this.checked);
     });
@@ -245,7 +245,7 @@
         toggle_view(".test-active-False", show_active_value);
 
         // show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
-        // $('#showActions').prop('checked', show_actions_value);
+        // $('.showActions').prop('checked', show_actions_value);
         // toggle_view(".dashboard-actions", show_actions_value);
         
         dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';

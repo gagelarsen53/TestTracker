@@ -53,7 +53,7 @@ def daily_stats(request, name, version, day, month, year):
 
     plt.xticks(np.arange(len(labels)), labels)
     b = ax1.bar(np.arange(len(labels)), sizes, align='center', alpha=0.5, color=colors)
-    plt.legend([b], labels)
+    # plt.legend([b], labels)
 
     # ax1.pie(sizes, labels=labels, shadow=False, startangle=90, colors=colors, autopct=autopct)
     # ax1.axis('equal')
@@ -67,5 +67,6 @@ def daily_stats(request, name, version, day, month, year):
     graphic_1 = base64.b64encode(image_png)
     context['test_status'] = graphic_1.decode('utf-8')
 
+    context['counts'] = {x: len(test_status[x]) for x in test_status.keys()}
 
     return render(request, "test_tracker/daily_stats.html", context)
