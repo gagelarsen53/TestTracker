@@ -74,15 +74,18 @@ class TestResult(models.Model):
             for prp in prps:
                 p_name = prp.attrib.get("name", None)
                 p_value = prp.attrib.get("value", None)
-                if p_name == "name" and str(p_value).startswith("Script Test Log"):
+                if p_name == "name" and ("[Script\\" in str(p_value) or str(p_value).startswith('Script Test Log')):
                     name = p_value
                 if p_name == "status":
                     status = p_value
             if not name or not status:
                 continue
 
-            test_name_re = r'Script Test Log \[[A-Za-z_0-9]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
+            test_name_re = r'.*?\[Script\\.*? - (?:[Tt]est_)?([A-Za-z0-9_]*)\]'
+            test_name_re_old = r'Script Test Log \[[A-Za-z_]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
             test_name_search = re.search(test_name_re, name)
+            if not test_name_search:
+                test_name_search = re.search(test_name_re_old, name)
             if not test_name_search:
                 errors.append("Test is not named properly: '{}'".format(name))
                 continue
