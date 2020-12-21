@@ -18,13 +18,13 @@ urlpatterns = [
          views.daily_stats, name='daily_stats'),
     # Delete All For Date
     path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>/delete',
-         views.delete_results_for_date, name='delete_results_for_date'),
+         views.delete_results_for_date_old, name='delete_results_for_date'),
     path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>/copy/<int:pk>',
-         views.copy_result_to_current_date, name='copy_result_to_current_date'),
+         views.copy_result_to_current_date_old, name='copy_result_to_current_date'),
     # Dashboard
-    path('dashboard/<str:name>/<str:version>', views.dashboard, name='dashboard'),
-    path('dashboard/<str:name>/<str:version>/table', views.dashboard_table, name='dashboard_table'),
-    path('dashboard/<str:name>/<str:version>/info', views.dashboard_info, name='dashboard_info'),
+    path('dashboard/<str:name>/<str:version>', views.dashboard_old, name='dashboard'),
+    path('dashboard/<str:name>/<str:version>/table', views.dashboard_table_old, name='dashboard_table'),
+    path('dashboard/<str:name>/<str:version>/info', views.dashboard_info_old, name='dashboard_info'),
     # Upload
     path('upload/results/<str:name>/<str:version>', views.upload_results, name='upload_results'),
     path('upload/testcases/<str:name>/<str:version>', views.upload_testcases, name='upload_testcases'),
@@ -43,4 +43,8 @@ urlpatterns = [
     path('delete/product/<int:pk>', views.ProductDeleteView.as_view(), name='delete_product'),
     path('delete/testcase/<int:pk>', views.TestCaseDeleteView.as_view(), name='delete_testcase'),
     path('delete/result/<int:pk>', views.TestResultDeleteView.as_view(), name='delete_testresult'),
+    # New Dashboard
+    path('dashboard2/<str:name>/<str:version>', views.dashboard, name='dashboard'),
+    # Ajax updates
+    # path('api/something')
 ]

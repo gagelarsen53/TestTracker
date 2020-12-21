@@ -8,10 +8,11 @@
 """
 from test_tracker.views.dashboard_overview import dashboard_overview
 from test_tracker.views.dashboard import dashboard
-from test_tracker.views.dashboard import dashboard_table
-from test_tracker.views.dashboard import dashboard_info
-from test_tracker.views.dashboard import delete_results_for_date
-from test_tracker.views.dashboard import copy_result_to_current_date
+from test_tracker.views.dashboard_old import dashboard_old
+from test_tracker.views.dashboard_old import dashboard_table_old
+from test_tracker.views.dashboard_old import dashboard_info_old
+from test_tracker.views.dashboard_old import delete_results_for_date_old
+from test_tracker.views.dashboard_old import copy_result_to_current_date_old
 from test_tracker.views.daily_stats import daily_stats
 from test_tracker.views.upload_results import upload_results
 from test_tracker.views.upload_testcases import upload_testcases
