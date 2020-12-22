@@ -97,3 +97,33 @@ body {
     text-align: center;
     vertical-align: middle;
 }
+
+#dashboard-button-actions {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+#dashboard-filter-options {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.test_status {
+
+}
+
+.test_category {
+
+}
+
+.test_subcategory {
+
+}
+
+#dashboard-filter-options {
+    display: none;
+}
+
+.test_status_selected {
+    border: 2px solid red !important;
+}

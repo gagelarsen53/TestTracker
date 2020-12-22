@@ -1,5 +1,112 @@
 {% extends "test_tracker/layout.html" %}
 
 {% block test_tracker_content %}
+
 <h1>New Dashboard</h1>
+
+<!-- Tabs -->
+<ul class="nav nav-pills">
+  <li class="active"><a data-toggle="tab" href="#table">Table</a></li>
+  <li><a data-toggle="tab" href="#info">Info</a></li>
+</ul>
+
+<div class="tab-content">
+    <!-- Dashboard Info -->
+    <div id="info" class="tab-pane">
+        <h3>Information:</h3>
+    </div>
+
+    <!-- Dashboard Table Section -->
+    <div id="table" class="tab-pane fade in active">
+
+        <!-- Dashboard Table Actions -->
+        <div id="dashboard-button-actions" class="row">
+            <div class="col col-md-12">
+                <div class="btn btn-default" title="Upload Results">
+                    <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
+                </div>
+                <div class="btn btn-default" title="Add Testcase">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </div>
+                <div id="dashboard-filter-button" class="btn btn-default" title="Filter">
+                    <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Table Filters -->
+        <div id="dashboard-filter-options" class="row">
+            <div class="col col-md-1">
+                <input class="form-check-input" id="show-category-checkbox" checked="checked" type="checkbox">
+                <label class="form-check-label" for="show-category-checkbox">Category</label>
+            </div>
+            <div class="col col-md-2">
+                <input class="form-check-input" id="show-subcategory-checkbox" checked="checked" type="checkbox">
+                <label class="form-check-label" for="show-subcategory-checkbox">Subcategory</label>
+            </div>
+        </div>
+
+        <!-- Dashboard Table -->
+        <div id=dashboard-table-section" class="row">
+            <div class="col col-md-12">
+                <table id="dashboard-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="test_name">Name</th>
+                            <th class="test_category">Category</th>
+                            <th class="test_subcategory">Subcategory</th>
+                            <th>Day 01</th>
+                            <th>Day 02</th>
+                            <th>Day 03</th>
+                            <th>Day 04</th>
+                            <th>Day 05</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="testcase_1" class="testcase_row" data-caseid="1" data-isvisible="true">
+                            <td class="test_name">Test 01</td>
+                            <td class="test_category">Cat 1</td>
+                            <td class="test_subcategory">Subcat 1</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                        </tr>
+                        <tr id="testcase_2" class="testcase_row" data-caseid="2" data-isvisible="true">
+                            <td class="test_name">Test 02</td>
+                            <td class="test_category">Cat 2</td>
+                            <td class="test_subcategory">Subcat 2</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                        </tr>
+                        <tr id="testcase_3" class="testcase_row" data-caseid="3" data-isvisible="true">
+                            <td class="test_name">Test 03</td>
+                            <td class="test_category">Cat 2</td>
+                            <td class="test_subcategory">Subcat 1</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                        </tr>
+                        <tr id="testcase_4" class="testcase_row" data-caseid="4" data-isvisible="true">
+                            <td class="test_name">Test 04</td>
+                            <td class="test_category">Cat 1</td>
+                            <td class="test_subcategory">Subcat 2</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                            <td class="test_status test_status_fail" data-isselected="false">Fail</td>
+                            <td class="test_status test_status_pass" data-isselected="false">Pass</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

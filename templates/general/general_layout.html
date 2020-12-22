@@ -2,27 +2,31 @@
 <html>
 <head>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-{% load static %}
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
-{{ form.media }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {% load static %}
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+    {{ form.media }}
 
-<!-- Bootstrap Modal Forms -->
-<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+    <!-- Bootstrap Modal Forms -->
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
 
-<!-- Local CSS -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
 
-{% block project_head %}
-{% endblock %}
+    <!-- Local CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-    body {
-        padding-top: 65px;
-    }
-</style>
+    {% block project_head %}
+    {% endblock %}
+
+    <style>
+        body {
+            padding-top: 65px;
+        }
+    </style>
 
 </head>
 <body>
