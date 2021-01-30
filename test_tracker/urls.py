@@ -43,4 +43,6 @@ urlpatterns = [
     path('delete/product/<int:pk>', views.ProductDeleteView.as_view(), name='delete_product'),
     path('delete/testcase/<int:pk>', views.TestCaseDeleteView.as_view(), name='delete_testcase'),
     path('delete/result/<int:pk>', views.TestResultDeleteView.as_view(), name='delete_testresult'),
+    # Duplicate
+    path('duplicate/product/<int:pk>', views.ProductDuplicateView.as_view(), name='duplicate_product'),
 ]

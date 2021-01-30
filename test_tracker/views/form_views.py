@@ -1,6 +1,7 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views import generic
+from django.shortcuts import redirect
 
 from bootstrap_modal_forms.mixins import PassRequestMixin
 
@@ -14,9 +15,6 @@ from test_tracker.forms.teststatus_from import TestStatusForm
 from test_tracker.models import Product
 from test_tracker.models import TestCase
 from test_tracker.models import TestResult
-from test_tracker.models import TestCategory
-from test_tracker.models import TestSubcategory
-from test_tracker.models import TestStatus
 
 
 class ProductCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):
@@ -41,6 +39,58 @@ class ProductDeleteView(PassRequestMixin, SuccessMessageMixin, generic.DeleteVie
     success_url = reverse_lazy('index')
 
 
+class BaseDuplicateView(generic.edit.ModelFormMixin, generic.edit.ProcessFormView):
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        current_product_id = kwargs['pk']
+        new_product = request._post
+        all_products = Product.objects.all()
+
+        # Verify that the product does not exist
+        for product in all_products:
+            if new_product['name'] == product.name and new_product['version'] == product.version:  # Already exists
+                return redirect('index')
+
+        # Create the new Product
+        p = Product(name=new_product['name'], version=new_product['version'], notes=new_product['notes'])
+        p.save()
+
+        # Copy all TestCases for new Product
+        current_testcases = TestCase.objects.filter(product_id=current_product_id)
+        for testcase in current_testcases:
+            tc = TestCase(
+                name=testcase.name,
+                source=testcase.source,
+                summary=testcase.summary,
+                active=testcase.active,
+                needs_review=testcase.needs_review,
+                create_date=testcase.create_date,
+                author=testcase.author,
+                category=testcase.category,
+                product=p,
+                subcategory=testcase.subcategory
+            )
+            tc.save()
+
+        return redirect('index')
+
+
+class DuplicateView(generic.detail.SingleObjectTemplateResponseMixin, BaseDuplicateView):
+    """View for duplicating an object, with a response rendered by a template."""
+    template_name_suffix = '_form'
+
+
+class ProductDuplicateView(PassRequestMixin, SuccessMessageMixin, DuplicateView):
+    model = Product
+    template_name = 'test_tracker/duplicate.html'
+    form_class = ProductForm
+    success_message = 'Success: Product was duplicated.'
+    success_url = reverse_lazy('index')
+
+
 class TestCaseCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):
     template_name = 'test_tracker/create.html'
     form_class = TestCaseForm
@@ -57,6 +107,7 @@ class TestCaseCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateVi
 class TestCaseDeleteView(PassRequestMixin, SuccessMessageMixin, generic.DeleteView):
     model = TestCase
     template_name = 'test_tracker/delete.html'
+
     def get_success_url(self):
         product = self.get_context_data()['testcase'].product
         return reverse_lazy('dashboard', kwargs={
@@ -114,6 +165,7 @@ class TestResultUpdateView(PassRequestMixin, SuccessMessageMixin, generic.Update
 class TestResultDeleteView(PassRequestMixin, SuccessMessageMixin, generic.DeleteView):
     model = TestResult
     template_name = 'test_tracker/delete.html'
+
     def get_success_url(self):
         product = self.get_context_data()['testresult'].testcase.product
         return reverse_lazy('dashboard', kwargs={
