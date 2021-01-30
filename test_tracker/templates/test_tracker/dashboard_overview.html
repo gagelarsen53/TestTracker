@@ -21,16 +21,20 @@
                     </a></td>
                     <td>{{ product.test_case_count }}</td>
                     <td>
-                    {% if user.is_authenticated %}
-                        <button type="button" class="delete-product btn btn-sm btn-primary"
+                        {% if user.is_authenticated %}
+                        <button type="button" title="Update Product" class="delete-product btn btn-sm btn-primary"
                                 data-id="{% url 'update_product' product.pk %}">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </button>
-                        <button type="button" class="update-product btn btn-sm btn-danger"
+                        <button type="button" title="Duplicate Product" class="duplicate-product btn btn-sm btn-success"
+                                data-id="{% url 'duplicate_product' product.pk %}">
+                            <span class="glyphicon glyphicon-duplicate"></span>
+                        </button>
+                        <button type="button" title="Delete Product" class="update-product btn btn-sm btn-danger"
                                 data-id="{% url 'delete_product' product.pk %}">
                             <span class="glyphicon glyphicon-trash"></span>
                         </button>
-                    {% endif %}
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -52,6 +56,9 @@
             formURL: "{% url 'create_product' %}"
         });
         $(".update-product").each(function () {
+            $(this).modalForm({formURL: $(this).data('id')});
+        });
+        $(".duplicate-product").each(function () {
             $(this).modalForm({formURL: $(this).data('id')});
         });
         $(".delete-product").each(function () {

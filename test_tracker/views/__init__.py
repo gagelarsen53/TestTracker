@@ -18,6 +18,7 @@ from test_tracker.views.upload_testcases import upload_testcases
 from test_tracker.views.form_views import ProductCreateView
 from test_tracker.views.form_views import ProductUpdateView
 from test_tracker.views.form_views import ProductDeleteView
+from test_tracker.views.form_views import ProductDuplicateView
 from test_tracker.views.form_views import TestCaseCreateView
 from test_tracker.views.form_views import TestCaseUpdateView
 from test_tracker.views.form_views import TestCaseDeleteView
