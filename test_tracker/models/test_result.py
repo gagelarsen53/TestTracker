@@ -107,7 +107,7 @@ class TestResult(models.Model):
             try:
                 test_case = TestCase.objects.get(product=product, name=test)
             except ObjectDoesNotExist:
-                errors.append("Test Case '{}' for '{}' does not exist".format(test, product))
+                errors.append("Test Case '{}' for '{}-{}' does not exist".format(test, product.name, product.version))
                 continue
 
             # Make sure it is not a duplicate
