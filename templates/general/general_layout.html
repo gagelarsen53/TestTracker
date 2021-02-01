@@ -45,7 +45,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Info Tracker</a>
+            <a class="navbar-brand" href="/">Info Tracker</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul id="navbar" class="nav navbar-nav navbar-left">
@@ -64,6 +64,7 @@
             <form class="nav-form navbar-right">
                 {% if not user.is_authenticated %}
                 <div style="padding-top: 7px; padding-bottom: 7px; padding-right: 25px;">
+                    <a class="btn btn-sml btn-primary" href="{% url 'signup' %}">Register</a>
                     <a class="btn btn-sml btn-success" href="{% url 'login' %}">Login</a>
                 </div>
                 {% else %}
