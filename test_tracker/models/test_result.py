@@ -82,12 +82,12 @@ class TestResult(models.Model):
                 continue
 
             test_name_re = r'.*?\[Script\\.*? - (?:[Tt]est_)?([A-Za-z0-9_]*)\]'
-            test_name_re_old = r'Script Test Log \[[A-Za-z_]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
+            test_name_re_old = r'Script Test Log \[[A-Za-z0-9_]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
             test_name_search = re.search(test_name_re, name)
             if not test_name_search:
                 test_name_search = re.search(test_name_re_old, name)
             if not test_name_search:
-                errors.append("Test is not named properly: '{}'".format(name))
+                errors.append("Test is not named properlysss: '{}'".format(name))
                 continue
 
             test_name = test_name_search.group(1)
