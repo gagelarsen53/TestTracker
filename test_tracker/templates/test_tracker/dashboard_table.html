@@ -30,9 +30,9 @@
         <th class="sortable">Test Case</th>
         {% for date in dates %}
             <th class="sortable">{{ date }}
-                <button data-url="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="no-sort daily-stats btn btn-xs btn-info">
+                <a href="{% url 'daily_stats' product.name product.version date.day date.month date.year %}" class="no-sort daily-stats btn btn-xs btn-info">
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                </button>
+                </a>
                 {% if user.is_authenticated %}
                 <button data-url="{% url 'delete_results_for_date' product.name product.version date.day date.month date.year %}" class="dashboard-actions result-delete-button no-sort btn btn-xs btn-info">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
