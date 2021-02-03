@@ -1,32 +1,80 @@
-{% load widget_tweaks %}
-<style>
-    .modal-stats {
-        padding-left:    15px;
-        padding-right:    15px;
-        padding-bottom:    15px;
-    }
+{% extends "test_tracker/layout.html" %}
 
-    img {
-        width: 100%;
-    }
-</style>
-<div class="modal-stats">
-    <h1 class="page-header">Statistics: {{ date }}</h1>
-    <img src="data:image/png;base64,{{ test_status|safe }}">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Count</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for status, count in counts.items %}
-            <tr>
-                <td>{{ status }}</td>
-                <td>{{ count }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{% block test_tracker_content %}
+
+<div class="row">
+    <div class="col-sm-3 col-md-2 sidebar"></div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">{{ product.name }}-{{ product.version }} Statistics on {{ date }}</h1>
+        <div id="container">
+            <canvas id="pie-chart"></canvas>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for status, count in counts.items %}
+                <tr>
+                    <td>{{ status }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Issues</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for issue in issues %}
+                <tr><td>{{ issue.testcase.name }}: {{ issue.note }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Bugs</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for bug in bugs %}
+                <tr><td>{{ bug.testcase.name }}: {{ bug.note }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+    var config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: {{ piechart.counts|safe }},
+                backgroundColor: {{ piechart.colors|safe}},
+            }],
+            labels: {{ piechart.labels|safe }}
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    };
+
+    window.onload = function() {
+        var piechart = document.getElementById('pie-chart')
+        piechart.width = 600;
+        var ctx = piechart.getContext('2d');
+        window.myPie = new Chart(ctx, config);
+    };
+</script>
+{% endblock %}
