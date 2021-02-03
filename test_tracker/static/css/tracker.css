@@ -97,3 +97,7 @@ body {
     text-align: center;
     vertical-align: middle;
 }
+
+.test_case_needs_review {
+    background-color: #fcd03d!important;
+}

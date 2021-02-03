@@ -44,7 +44,7 @@
 
     <tbody id="dashboard-table">
     {% for case in testcases %}
-    <tr class="test-case-row test-active-{{ case.testcase.active }}"
+    <tr class="test-case-row test-active-{{ case.testcase.active }} {% if case.testcase.needs_review %}test_case_needs_review{% endif %}"
         data-delete_url="{% url 'delete_testcase' case.testcase.pk %}"
         data-update_url="{% url 'update_testcase' case.testcase.pk %}">
         <td>{{ case.testcase.category.category }}</td>
