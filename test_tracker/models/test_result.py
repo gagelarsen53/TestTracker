@@ -82,7 +82,7 @@ class TestResult(models.Model):
                 continue
 
             test_name_re = r'.*?\[Script\\.*? - (?:[Tt]est_)?([A-Za-z0-9_]*)\]'
-            test_name_re_old = r'Script Test Log \[[A-Za-z0-9_]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
+            test_name_re_old = r'Script Test Log \[[A-Za-z_0-9]*\\(?:[Tt]est_)?([A-Za-z0-9_]*)\]'
             test_name_search = re.search(test_name_re, name)
             if not test_name_search:
                 test_name_search = re.search(test_name_re_old, name)
@@ -107,7 +107,7 @@ class TestResult(models.Model):
             try:
                 test_case = TestCase.objects.get(product=product, name=test)
             except ObjectDoesNotExist:
-                errors.append("Test Case '{}' for '{}' does not exist".format(test, product))
+                errors.append("Test Case '{}' for '{}-{}' does not exist".format(test, product.name, product.version))
                 continue
 
             # Make sure it is not a duplicate

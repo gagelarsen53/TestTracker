@@ -75,7 +75,6 @@ class Product(models.Model):
                 tc['results'] = [x for x in tc['results'] if x[1] in dates_with_results]
         return test_cases
 
-
     def get_json(self):
         raise NotImplementedError("get_json function not yet implemented for product object")
 

@@ -46,8 +46,8 @@ def upload_results(request, name, version):
 
             if len(errors) > 0:
                 context['errors'] = errors
-            else:
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+            return render(request, "test_tracker/upload_results.html", context)
         else:
             context['errors'] = ['Invalid/missing form entries...']
     else:
