@@ -121,7 +121,25 @@
                 formURL: "{% url 'create_result' %}"
             });
             $(".update-testresult").each(function () {
-                $(this).modalForm({formURL: $(this).data('id')});
+                var result_id = $(this).data('result_id');
+                var update_result_link_url = $(this).data('id')
+                function updateResultModalFormLink() {
+                    $("#link_result_" + result_id).modalForm(
+                        {
+                            formURL: update_result_link_url,
+                            asyncUpdate: true,
+                            asyncSettings: {
+                                closeOnSubmit: true,
+                                successMessage: 'testing',
+                                dataUrl: "/TestTracker/async/update/result/" + result_id,
+                                dataElementId: "#result_" + result_id,
+                                dataKey: "result",
+                                addModalFormFunction: updateResultModalFormLink
+                            }
+                        }
+                    );
+                }
+                updateResultModalFormLink();
             });
             $(".delete-testresult").each(function () {
                 $(this).modalForm({formURL: $(this).data('id')});
@@ -157,13 +175,30 @@
                 var is_result = $(this).closest(".dashboard-status-cell").length;
 
                 if (is_result) {
-                    var delete_result_id = $(this).data("delete_url");
-                    var update_result_id = $(this).data("update_url");
+                    var result_id = $(this).data("result_id");
+                    var delete_result_url = $(this).data("delete_url");
+                    var update_result_url = $(this).data("update_url");
                     var copy_result_to_current = $(this).data("copy_current_url");
 
                     var x = $("#update-testresult-context")
-                    $("#update-testresult-context").modalForm({formURL: update_result_id});
-                    $("#delete-testresult-context").modalForm({formURL: delete_result_id});
+                    function updateResultModalForm() {
+                        $("#update-testresult-context").modalForm(
+                            {
+                                formURL: update_result_url,
+                                asyncUpdate: true,
+                                asyncSettings: {
+                                    closeOnSubmit: true,
+                                    successMessage: 'testing',
+                                    dataUrl: "/TestTracker/async/update/result/" + result_id,
+                                    dataElementId: "#result_" + result_id,
+                                    dataKey: "result",
+                                    addModalFormFunction: updateResultModalForm
+                                }
+                            }
+                        );
+                    }
+                    updateResultModalForm();
+                    $("#delete-testresult-context").modalForm({formURL: delete_result_url});
                     $('#copy-current-testresult-context').click(function() {
                         x = confirm("Do you really want to copy result to current date?");
                         if (x)
@@ -173,11 +208,11 @@
                     })
                 }
 
-                var delete_testcase_id = $(this).parent(".test-case-row").data("delete_url");
-                var update_testcase_id = $(this).parent(".test-case-row").data("update_url");
+                var delete_testcase_url = $(this).parent(".test-case-row").data("delete_url");
+                var update_testcase_url = $(this).parent(".test-case-row").data("update_url");
 
-                $("#update-testcase-context").modalForm({formURL: update_testcase_id});
-                $("#delete-testcase-context").modalForm({formURL: delete_testcase_id});
+                $("#update-testcase-context").modalForm({formURL: update_testcase_url});
+                $("#delete-testcase-context").modalForm({formURL: delete_testcase_url});
 
                 var sb = $("#sidebar");
                 var nb = $("#navbar");
