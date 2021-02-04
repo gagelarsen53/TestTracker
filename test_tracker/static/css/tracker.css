@@ -96,4 +96,18 @@ body {
 .dashboard-status-cell {
     text-align: center;
     vertical-align: middle;
+    padding: 0!important;
+}
+
+.table>tbody>tr>td.dashboard-status-cell {
+  padding: 0;
+}
+
+.test_case_needs_review {
+    background-color: #fcd03d!important;
+}
+
+.status-div {
+    height: 37px;
+    width: 100%;
 }

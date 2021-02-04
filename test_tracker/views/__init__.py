@@ -28,5 +28,5 @@ from test_tracker.views.form_views import TestResultDeleteView
 from test_tracker.views.form_views import TestCategoryCreateView
 from test_tracker.views.form_views import TestSubcategoryCreateView
 from test_tracker.views.form_views import TestStatusCreateView
-
-
+from test_tracker.views.async_views import async_update_case
+from test_tracker.views.async_views import async_update_results

@@ -45,4 +45,6 @@ urlpatterns = [
     path('delete/result/<int:pk>', views.TestResultDeleteView.as_view(), name='delete_testresult'),
     # Duplicate
     path('duplicate/product/<int:pk>', views.ProductDuplicateView.as_view(), name='duplicate_product'),
+    # Async
+    path('async/update/result/<int:pk>', views.async_update_results, name='async_update_results')
 ]

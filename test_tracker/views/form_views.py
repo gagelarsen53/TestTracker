@@ -4,6 +4,7 @@ from django.views import generic
 from django.shortcuts import redirect
 
 from bootstrap_modal_forms.mixins import PassRequestMixin
+from bootstrap_modal_forms.generic import BSModalUpdateView
 
 from test_tracker.forms.product_form import ProductForm
 from test_tracker.forms.testcase_form import TestCaseForm
@@ -143,9 +144,9 @@ class TestResultCreateView(PassRequestMixin, SuccessMessageMixin, generic.Create
         })
 
 
-class TestResultUpdateView(PassRequestMixin, SuccessMessageMixin, generic.UpdateView):
-    model = TestResult
+class TestResultUpdateView(BSModalUpdateView):
     template_name = 'test_tracker/update.html'
+    model = TestResult
     form_class = TestResultForm
     success_message = 'Success: TestResult was updated.'
 

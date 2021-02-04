@@ -87,7 +87,7 @@ class TestResult(models.Model):
             if not test_name_search:
                 test_name_search = re.search(test_name_re_old, name)
             if not test_name_search:
-                errors.append("Test is not named properly: '{}'".format(name))
+                errors.append("Test is not named properlysss: '{}'".format(name))
                 continue
 
             test_name = test_name_search.group(1)

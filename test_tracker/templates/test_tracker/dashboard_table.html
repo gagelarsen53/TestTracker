@@ -44,7 +44,7 @@
 
     <tbody id="dashboard-table">
     {% for case in testcases %}
-    <tr class="test-case-row test-active-{{ case.testcase.active }}"
+    <tr class="test-case-row test-active-{{ case.testcase.active }} {% if case.testcase.needs_review %}test_case_needs_review{% endif %}"
         data-delete_url="{% url 'delete_testcase' case.testcase.pk %}"
         data-update_url="{% url 'update_testcase' case.testcase.pk %}">
         <td>{{ case.testcase.category.category }}</td>
@@ -52,37 +52,22 @@
         <td>
             {{ case.testcase.name }}
             {% if user.is_authenticated %}
-                <!--
-                <div  style="float: right;">
-                <button type="button" class="dashboard-actions update-testcase btn btn-xs btn-primary" data-id="{% url 'update_testcase' case.testcase.pk %}">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </button>
-                <button type="button" class="delete-testcase dashboard-actions btn btn-xs btn-danger" data-id="{% url 'delete_testcase' case.testcase.pk %}">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                </button>
-                </div> Until we can find a better way to do this. Lets not make it an option...
-                <button type="button" class="create-testresult btn btn-sm btn-primary" data-id="{% url 'create_result' %}">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
-            </div>
-                -->
             {% endif %}
         </td>
         {% for r in case.results %}
             {% if r.0 %}
-                <td class="dashboard-status-cell" title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}"
-                    style='color: {{ r.0.status.text_hex_color }};' bgcolor="{{ r.0.status.hex_color }}" data-update_url="{% url 'update_result' r.0.pk %}"
+                <td  class="dashboard-status-cell" id="result_{{ r.0.id }}"
+                    data-update_url="{% url 'update_result' r.0.pk %}"
                     data-copy_current_url="{% url 'copy_result_to_current_date' product.name product.version r.0.date.day r.0.date.month r.0.date.year r.0.pk %}"
-                    data-delete_url="{% url 'delete_testresult' r.0.pk %}">
+                    data-delete_url="{% url 'delete_testresult' r.0.pk %}" data-result_id="{{ r.0.id }}">
                     {% if user.is_authenticated %}
-                    <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-id="{% url 'update_result' r.0.pk %}">
+                    <div title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" class="status-div"
+                        style='color: {{ r.0.status.text_hex_color }}; background-color: {{ r.0.status.hex_color }}'>
+                    <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-result_id="{{ r.0.id }}" 
+                    data-id="{% url 'update_result' r.0.pk %}" id="link_result_{{ r.0.id }}">
                         {{ r.0.status.status }}
                     </a>
-                    <!--
-                    <button type="button" class="delete-testcase dashboard-actions btn btn-xs btn-danger" data-id="{% url 'delete_testresult' r.0.pk %}" style="float: right;">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </button>
-                    -->
+                    </div>
                     {% else %}
                     {{ r.0.status.status }}
                     {% endif %}

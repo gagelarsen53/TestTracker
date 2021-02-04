@@ -1,0 +1,11 @@
+{% if user.is_authenticated %}
+<div title="{{ result.status.status }}&#013;{{ result.author }}&#013;{{ result.note }}" class="status-div"
+    style='color: {{ result.status.text_hex_color }}; background-color: {{ result.status.hex_color }}'>
+<a style="color: {{ result.status.text_hex_color }};" class="update-testresult" data-id="{% url 'update_result' result.pk %}"
+     id="link_result_{{ result.id }}">
+    {{ result.status.status }}
+</a>
+</div>
+{% else %}
+{{ result.status.status }}
+{% endif %}
