@@ -20,7 +20,7 @@ from test_tracker.models.test_case import TestCase
 @transaction.atomic
 def upload_testcases(request, name, version):
     context = {}
-    products = Product.objects.filter()
+    products = Product.objects.filter(active=True).order_by("name")
     context['products'] = products
     product = Product.objects.get(name=name, version=version)
 
