@@ -22,7 +22,7 @@ from test_tracker.models.test_result import TestResult
 @transaction.atomic
 def upload_results(request, name, version):
     context = {}
-    context['products'] = Product.objects.filter()
+    context['products'] = Product.objects.filter(active=True).order_by("name")
     product = Product.objects.get(name=name, version=version)
 
     author = request.user
