@@ -12,6 +12,7 @@ from test_tracker.views.dashboard import dashboard_table
 from test_tracker.views.dashboard import dashboard_info
 from test_tracker.views.dashboard import delete_results_for_date
 from test_tracker.views.dashboard import copy_result_to_current_date
+from test_tracker.views.dashboard2 import dashboard2
 from test_tracker.views.daily_stats import daily_stats
 from test_tracker.views.upload_results import upload_results
 from test_tracker.views.upload_testcases import upload_testcases

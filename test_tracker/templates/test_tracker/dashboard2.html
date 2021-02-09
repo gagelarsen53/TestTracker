@@ -1,0 +1,57 @@
+{% extends "test_tracker/layout.html" %}
+
+{% block extra_head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
+<link rel="stylesheet" href="{% static 'css/test_tracker_dashboard.css' %}">
+{% endblock %}
+
+{% block test_tracker_content %}
+{% load static %}
+
+<h1>{{ product.name }} {{ product.version }}</h1>
+
+<div class="table-responsive">
+    <table id="dashboard-table" class="table table-hover">
+        <thead>
+            <tr>
+                <th>Result</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Last Result</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for testcase in testcases %}
+            <tr class="testcase-row" data-testcase_id="{{ testcase.id }}">
+                <td class="testcase-result-cell">
+                    <div id="test-result-{{ testcase.id }}">
+                        <p class="test-dashboard-status test-dashboard-status-{{ testcase.last_status_class }}">
+                            {{ testcase.last_status }}
+                        </p>
+                    </div>
+                </td>
+                <td class="testcase-name-cell">{{ testcase.name }}</td>
+                <td class="testcase-category-cell">{{ testcase.category }}</td>
+                <td class="testcase-subcategory-cell">{{ testcase.subcategory }}</td>
+                <td class="testcase-days-since-cell">
+                    <p class="{{ testcase.out_of_date_class }}">
+                        {{ testcase.days_since_last }} day(s)
+                    </p>
+                </td>
+                <td class="testcase-status-cell">{{ testcase.active_status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+<!-- Script Tags -->
+{% block test_tracker_script %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
+<script src="{% static 'js/test_tracker_dashboard.js' %}"></script>
+{% endblock %}
