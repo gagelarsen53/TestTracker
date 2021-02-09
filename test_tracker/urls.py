@@ -16,6 +16,7 @@ urlpatterns = [
     # Statistics
     path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>',
          views.daily_stats, name='daily_stats'),
+    path('dashboard/needs_review/<str:name>/<str:version>', views.needs_review, name='needs_review'),
     # Delete All For Date
     path('dashboard/<str:name>/<str:version>/<int:day>-<int:month>-<int:year>/delete',
          views.delete_results_for_date, name='delete_results_for_date'),
