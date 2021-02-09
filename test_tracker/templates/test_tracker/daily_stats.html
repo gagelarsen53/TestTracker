@@ -1,32 +1,135 @@
-{% load widget_tweaks %}
-<style>
-    .modal-stats {
-        padding-left:    15px;
-        padding-right:    15px;
-        padding-bottom:    15px;
-    }
+{% extends "test_tracker/layout.html" %}
 
-    img {
-        width: 100%;
+{% block test_tracker_content %}
+
+<style>
+    th {
+        font-size: 25px;
     }
 </style>
-<div class="modal-stats">
-    <h1 class="page-header">Statistics: {{ date }}</h1>
-    <img src="data:image/png;base64,{{ test_status|safe }}">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Count</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for status, count in counts.items %}
-            <tr>
-                <td>{{ status }}</td>
-                <td>{{ count }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
+<div class="row">
+    <div class="col-sm-3 col-md-2 sidebar"></div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+    <h1 class="page-header">{{ product.name }}-{{ product.version }} Statistics on {{ date }}</h1>
+    <div id="container">
+        <div class="row">
+            <div class="col-xs-4">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for status, count in counts.items %}
+                        <tr>
+                            <td>{{ status }}</td>
+                            <td>{{ count }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-4">
+                <canvas id="pie_chart"></canvas>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-10">
+                {% if issue_notes %}
+                <table class="table table-striped">
+                    <thead data-toggle="collapse" data-target="#issueTableBody">
+                        <tr>
+                            <th>Issues</th>
+                        </tr>
+                    </thead>
+                    <tbody class="collapse in" id="issueTableBody">
+                    {% for issue in issue_notes %}
+                        <tr><td>{{ issue.testcase.name }}: {{ issue.note }}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+
+                {% if bug_notes %}
+                <table class="table table-striped">
+                    <thead data-toggle="collapse" data-target="#bugTableBody">
+                        <tr>
+                            <th>Bugs</th>
+                        </tr>
+                    </thead>
+                    <tbody class="collapse in" id="bugTableBody">
+                    {% for bug in bug_notes %}
+                        <tr><td>{{ bug.testcase.name }}: {{ bug.note }}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr>
+        <h1>Results from {{ line_chart_data.today_date }} to {{ line_chart_data.two_weeks_date }}</h1>
+            <div class="row">
+                <div class="col-xs-10">
+                    <canvas id="line_chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script type="text/javascript">
+    var pie_config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: {{ piechart.counts|safe }},
+                backgroundColor: {{ piechart.colors|safe}},
+            }],
+            labels: {{ piechart.labels|safe }}
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'left'
+            }
+        }
+    };
+
+    var line_config = {
+        type: 'line',
+        data: {
+            labels: {{ line_chart_data.labels|safe }},
+            datasets: {{ line_chart_data.datasets|safe }}
+        },
+        options: {
+            legend: {
+                position: 'right'
+            }
+        }
+    };
+
+    window.onload = function() {
+        var piechart = document.getElementById('pie_chart');
+        piechart.width = 600;
+        var ctx = piechart.getContext('2d');
+        piechart = new Chart(ctx, pie_config);
+
+        var linechart = document.getElementById('line_chart');
+        line_chart.height = 120;
+        var ctx = linechart.getContext('2d');
+        linechart = new Chart(ctx, {
+            type: 'line',
+            data: line_config['data']
+        });
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+{% endblock %}
