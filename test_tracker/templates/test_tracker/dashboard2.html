@@ -13,22 +13,14 @@
 
 <div class="table-responsive">
     <table id="dashboard-table" class="table table-hover">
-        <colgroup>
-            <col span="1" />
-            <col class="name-column" />
-            <col class="note-column" />
-            <col class="categories-column" />
-            <col class="last-result-column" />
-            <col class="status-column" />
-        </colgroup>
         <thead>
             <tr>
-                <th>Result</th>
-                <th>Name</th>
-                <th colspan="3">Note</th>
-                <th>Categories</th>
-                <th>Last Result</th>
-                <th>Status</th>
+                <th class="col-md-2">Result</th>
+                <th class="col-md-2">Name</th>
+                <th class="col-md-5">Note</th>
+                <th class="col-md-2">Categories</th>
+                <th class="col-md-2">Last Result</th>
+                <th class="col-md-2">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -41,8 +33,8 @@
                         </p>
                     </div>
                 </td>
-                <td class="testcase-name-cell">{{ testcase.name }}</td>
-                <td colspan="3" class="testcase-result-note" title="{{ testcase.result_note }}">{{ testcase.result_note }}</td>
+                <td class="testcase-name-cell" title="{{ testcase.name }}">{{ testcase.name }}</td>
+                <td class="testcase-result-note" title="{{ testcase.result_note }}">{{ testcase.result_note }}</td>
                 <td class="testcase-category-cell">
                     <div class="test-category">{{ testcase.category }}</div>
                     <div class="test-subcategory">{{ testcase.subcategory }}</div>

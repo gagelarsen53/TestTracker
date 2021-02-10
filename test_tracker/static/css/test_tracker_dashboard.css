@@ -38,6 +38,12 @@
     background-color: #4a484d;
 }
 
+.test-dashboard-status-none {
+    border-color: #353436;
+    color: white;
+    background-color: #4a484d;
+}
+
 .last-result-very-out-of-date {
     border-width: 1px;
     border-style: solid;
@@ -72,7 +78,7 @@
     font-size: 10px;
 }
 
-.testcase-result-note {
+.testcase-result-note, .testcase-name-cell {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -84,25 +90,31 @@
 }
 
 #result-column {
-    width: 10%;
+    width: 10;
+    widthUnit '';
 }
 
 #name-column {
-    width: 20%;
+    width: 20;
+    widthUnit '';
 }
 
 #note-column {
-    width: 40%;
+    width: 40;
+    widthUnit '';
 }
 
 #categories-column {
-    width: 10%;
+    width: 10;
+    widthUnit '';
 }
 
 #last-result-column {
-    width: 10%;
+    width: 10;
+    widthUnit '';
 }
 
 #status-column {
-    width: 10%;
+    width: 10;
+    widthUnit '';
 }
