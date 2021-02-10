@@ -45,14 +45,16 @@ def dashboard2(request, name, version):
             'active_status': 'Active'
         }
 
-        case_result = TestResult.objects.filter(testcase=testcase).order_by('date')
+        case_result = TestResult.objects.filter(testcase=testcase).order_by('-date')
         if len(case_result) > 0:
             last_result = case_result[0]
             days_since = (datetime.date.today() - last_result.date).days
             testcase_dict.update({
                 'last_status_class': last_result.status.status.lower().replace(' ', '-'),
                 'last_status': last_result.status.status,
+                'last_result_date': last_result.date,
                 'days_since_last': days_since,
+                'result_note': last_result.note if last_result.status.status != 'Pass' else '',
                 'out_of_date_class': None if days_since < 3 else 'last-result-out-of-date' if days_since < 7 else 'last-result-very-out-of-date'
             })
         testcases_list.append(testcase_dict)

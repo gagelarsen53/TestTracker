@@ -5,6 +5,7 @@
     border-radius: 7px;
     text-align: center;
     display: inline-block;
+    min-width: 106px;
 }
 
 .test-dashboard-status-pass {
@@ -57,4 +58,51 @@
     color: yellow;
     background-color: #ff8f21;
     display: inline-block;
+}
+
+.test-category, .test-subcategory {
+    display: inline;
+    border-width: 1px;
+    border-style: solid;
+    padding: 2px 5px;
+    border-radius: 7px;
+    border-color: #adadad;
+    color: black;
+    background-color: #d4d4d4;
+    font-size: 10px;
+}
+
+.testcase-result-note {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#dashboard-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#result-column {
+    width: 10%;
+}
+
+#name-column {
+    width: 20%;
+}
+
+#note-column {
+    width: 40%;
+}
+
+#categories-column {
+    width: 10%;
+}
+
+#last-result-column {
+    width: 10%;
+}
+
+#status-column {
+    width: 10%;
 }
