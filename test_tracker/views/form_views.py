@@ -1,7 +1,7 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views import generic
-from django.shortcuts import redirect
+from django.shortcuts import redirect, HttpResponseRedirect
 
 from bootstrap_modal_forms.mixins import PassRequestMixin
 from bootstrap_modal_forms.generic import BSModalUpdateView
@@ -125,10 +125,14 @@ class TestCaseUpdateView(PassRequestMixin, SuccessMessageMixin, generic.UpdateVi
 
     def get_success_url(self):
         product = self.get_context_data()['testcase'].product
-        return reverse_lazy('dashboard', kwargs={
-            'name': product.name,
-            'version': product.version,
-        })
+        url = self.request.META.get('HTTP_REFERER', None)
+        if url:
+            return url
+        else:
+            return reverse_lazy('dashboard', kwargs={
+                'name': product.name,
+                'version': product.version,
+            })
 
 
 class TestResultCreateView(PassRequestMixin, SuccessMessageMixin, generic.CreateView):

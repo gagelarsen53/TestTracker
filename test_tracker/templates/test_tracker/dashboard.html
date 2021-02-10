@@ -38,7 +38,7 @@
                 </li>
                 <li class="dashboard-action-button">
                     <form action="{% url 'needs_review' product.name product.version %}">
-                        <input type="submit" class="btn btn-sm btn-success" value="View Needs Review">
+                        <input type="submit" class="btn btn-sm btn-success" value="Review Test Cases">
                     </form>
                 </li>
                 {% if user.is_staff %}
@@ -215,6 +215,7 @@
 
                 var delete_testcase_url = $(this).parent(".test-case-row").data("delete_url");
                 var update_testcase_url = $(this).parent(".test-case-row").data("update_url");
+        console.log($(this).parent(".test-case-row"));
 
                 $("#update-testcase-context").modalForm({formURL: update_testcase_url});
                 $("#delete-testcase-context").modalForm({formURL: delete_testcase_url});

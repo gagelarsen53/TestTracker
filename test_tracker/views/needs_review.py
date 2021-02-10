@@ -20,9 +20,8 @@ def needs_review(request, name, version):
     product = Product.objects.get(name=name, version=version)
     context['product'] = product
 
-    all_testcases = context['product'].get_test_cases()
+    all_testcases = product.get_test_cases()
     testcases = [testcase for testcase in all_testcases if testcase.needs_review]
-
     context['testcases'] = testcases
 
     return render(request, "test_tracker/needs_review.html", context)
