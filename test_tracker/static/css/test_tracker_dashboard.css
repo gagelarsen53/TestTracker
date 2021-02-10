@@ -1,0 +1,120 @@
+.test-dashboard-status {
+    border-width: 1px;
+    border-style: solid;
+    padding: 2px 5px;
+    border-radius: 7px;
+    text-align: center;
+    display: inline-block;
+    min-width: 106px;
+}
+
+.test-dashboard-status-pass {
+    border-color: #1ac200;
+    color: black;
+    background-color: #73d463;
+}
+
+.test-dashboard-status-fail {
+    border-color: #ff5e4d;
+    color: black;
+    background-color: #ff7769;
+}
+
+.test-dashboard-status-false-negative {
+    border-color: #d1bc75;
+    color: black;
+    background-color: #e6cf83;
+}
+
+.test-dashboard-status-issue {
+    border-color: #b758e0;
+    color: black;
+    background-color: #c88ae3;
+}
+
+.test-dashboard-status-bug {
+    border-color: #353436;
+    color: white;
+    background-color: #4a484d;
+}
+
+.test-dashboard-status-none {
+    border-color: #353436;
+    color: white;
+    background-color: #4a484d;
+}
+
+.last-result-very-out-of-date {
+    border-width: 1px;
+    border-style: solid;
+    padding: 2px 5px;
+    border-radius: 7px;
+    border-color: #c24132;
+    color: white;
+    background-color: #fa452f;
+    display: inline-block;
+}
+
+.last-result-out-of-date {
+    border-width: 1px;
+    border-style: solid;
+    padding: 2px 5px;
+    border-radius: 7px;
+    border-color: #f59536;
+    color: yellow;
+    background-color: #ff8f21;
+    display: inline-block;
+}
+
+.test-category, .test-subcategory {
+    display: inline;
+    border-width: 1px;
+    border-style: solid;
+    padding: 2px 5px;
+    border-radius: 7px;
+    border-color: #adadad;
+    color: black;
+    background-color: #d4d4d4;
+    font-size: 10px;
+}
+
+.testcase-result-note, .testcase-name-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#dashboard-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#result-column {
+    width: 10;
+    widthUnit '';
+}
+
+#name-column {
+    width: 20;
+    widthUnit '';
+}
+
+#note-column {
+    width: 40;
+    widthUnit '';
+}
+
+#categories-column {
+    width: 10;
+    widthUnit '';
+}
+
+#last-result-column {
+    width: 10;
+    widthUnit '';
+}
+
+#status-column {
+    width: 10;
+    widthUnit '';
+}

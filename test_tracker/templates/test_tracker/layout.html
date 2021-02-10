@@ -5,6 +5,8 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/tracker.css' %}">
 <script src="{% static 'js/test_tracker.js' %}"></script>
+{% block extra_head %}
+{% endblock %}
 {% endblock %}
 
 
@@ -35,5 +37,12 @@
 {% block test_tracker_content %}
 {% endblock %}
 </div>
+
+{% endblock %}
+
+{% block project_script %}
+
+    {% block test_tracker_script %}
+    {% endblock %}
 
 {% endblock %}
