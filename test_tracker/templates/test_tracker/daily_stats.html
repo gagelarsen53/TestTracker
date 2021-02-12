@@ -38,19 +38,21 @@
             </div>
         </div>
 
-
         <div class="row">
             <div class="col-xs-10">
                 {% if issue_notes %}
                 <table class="table table-striped">
                     <thead data-toggle="collapse" data-target="#issueTableBody">
                         <tr>
-                            <th>Issues</th>
+                            <th colspan="2">Issues</th>
                         </tr>
                     </thead>
                     <tbody class="collapse in" id="issueTableBody">
                     {% for issue in issue_notes %}
-                        <tr><td>{{ issue.testcase.name }}: {{ issue.note }}</td></tr>
+                        <tr>
+                            <td class="col-sm-3">{{ issue.0 }}</td>
+                            <td>{{ issue.1 }}</td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                 </table>
@@ -60,12 +62,15 @@
                 <table class="table table-striped">
                     <thead data-toggle="collapse" data-target="#bugTableBody">
                         <tr>
-                            <th>Bugs</th>
+                            <th colspan="2">Bugs</th>
                         </tr>
                     </thead>
                     <tbody class="collapse in" id="bugTableBody">
                     {% for bug in bug_notes %}
-                        <tr><td>{{ bug.testcase.name }}: {{ bug.note }}</td></tr>
+                        <tr>
+                            <td class="col-sm-3">{{ bug.0 }}</td>
+                            <td>{{ bug.1 }}</td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                 </table>
