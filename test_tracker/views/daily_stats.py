@@ -36,9 +36,9 @@ def daily_stats(request, name, version, day, month, year):
     for result in results:
         test_status[result.status.status].append(result)
         if result.status.status == "Issue":
-            issues.append(result)
+            issues.append((result.testcase.name, get_cleaned_note(result)))
         if result.status.status == "Bug":
-            bugs.append(result)
+            bugs.append((result.testcase.name, get_cleaned_note(result)))
     context['issue_notes'] = issues
     context['bug_notes'] = bugs
     context['counts'] = {x: len(test_status[x]) for x in test_status.keys()}
@@ -67,10 +67,10 @@ def daily_stats(request, name, version, day, month, year):
     date_status_counts = {}
     desired_statuses = ['Pass', 'Fail', 'False Negative', 'Issue', 'Bug']
     test_cases = [tc for tc in product.get_test_cases()]
-    results_over_time = [testcase.get_last_n_days_results(n_days=num_days) for testcase in test_cases]
+    results_over_time = [testcase.get_last_n_days_results(n_days=num_days + 1) for testcase in test_cases]
     for testcase in results_over_time:
         for day_with_result in testcase:
-            date = day_with_result[0].date.strftime('%b %d')
+            date = day_with_result[0].date
             if date not in date_status_counts.keys():
                 date_status_counts[date] = {}
                 for desired_status in desired_statuses:
@@ -83,7 +83,9 @@ def daily_stats(request, name, version, day, month, year):
     for status in desired_statuses:
         status_counts_over_time[status] = []
 
-    for date in date_status_counts:
+    dates = sorted(list(date_status_counts.keys()))
+    dates.reverse()
+    for date in dates:
         for status in date_status_counts[date]:
             status_counts_over_time[status].append(date_status_counts[date][status])
 
@@ -99,11 +101,20 @@ def daily_stats(request, name, version, day, month, year):
             'pointHitRadius': 1000
         })
 
+    dates = [d.strftime('%b %d') for d in sorted(list(date_status_counts.keys()))]
+    dates.reverse()
+
     context['line_chart_data'] = {
-        'labels': list(date_status_counts.keys()),
+        'labels': dates,
         'datasets': json.dumps(line_chart_datasets),
         'today_date': datetime.datetime.today().strftime('%b %d'),
         'two_weeks_date': (datetime.datetime.today() - datetime.timedelta(days=num_days)).strftime('%b %d')
     }
 
     return render(request, "test_tracker/daily_stats.html", context)
+
+
+def get_cleaned_note(result):
+    note = result.note
+    note = note.replace(' (copied)', '')
+    return note
