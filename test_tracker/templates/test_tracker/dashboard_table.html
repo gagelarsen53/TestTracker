@@ -63,10 +63,10 @@
                     {% if user.is_authenticated %}
                     <div title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" class="status-div"
                         style='color: {{ r.0.status.text_hex_color }}; background-color: {{ r.0.status.hex_color }}'>
-                    <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-result_id="{{ r.0.id }}" 
-                    data-id="{% url 'update_result' r.0.pk %}" id="link_result_{{ r.0.id }}">
-                        {{ r.0.status.status }}
-                    </a>
+                        <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-result_id="{{ r.0.id }}"
+                        data-id="{% url 'update_result' r.0.pk %}" id="link_result_{{ r.0.id }}">
+                            {{ r.0.status.status }}
+                        </a>
                     </div>
                     {% else %}
                     {{ r.0.status.status }}
