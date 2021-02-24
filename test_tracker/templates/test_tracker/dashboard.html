@@ -176,21 +176,12 @@
             {% if user.is_authenticated %}
                 $( "#dashboard-table tr td" ).contextmenu(function(e) {
                     $("#contextMenu").replaceWith(contextMenuClone.clone());
-                    var rowOverlay = $('#rowOverlay');
                     var row = $(this).parent(".test-case-row");
                     var bottomWidth = row.css('width');
                     var bottomHeight = row.css('height');
                     var rowPos = row.position();
                     var bottomTop = rowPos.top;
                     var bottomLeft = rowPos.left;
-                    rowOverlay.css({
-                        position: 'absolute',
-                        top: bottomTop,
-                        left: bottomLeft,
-                        width: bottomWidth,
-                        height: bottomHeight
-                    });
-                    rowOverlay.show();
 
                     // Update URLS
                     var is_result = $(this).closest(".dashboard-status-cell").length;
@@ -343,7 +334,6 @@
         load_dashboard("{% url 'dashboard_table' product.name product.version %}");
 
         $('body').click(function () {
-            $("#rowOverlay").hide();
             $("#contextMenu").hide();
         });
 

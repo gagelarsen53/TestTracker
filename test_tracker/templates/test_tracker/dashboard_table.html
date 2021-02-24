@@ -2,13 +2,6 @@
     #contextMenu {
       position: absolute;
     }
-     #rowOverlay {
-       display: none;
-       background-color: Silver;
-       text-align: center;
-       position: absolute;
-       opacity: 0.5;
-     }
 </style>
 
 {% if user.is_authenticated %}
@@ -80,7 +73,7 @@
     {% endfor %}
     </tbody>
 </table>
-<div id="rowOverlay"></div>
+
 <script>
     $('th').click(function(){
         var table = $(this).parents('thead').eq(0).parents('table').eq(0)
