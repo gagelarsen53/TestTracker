@@ -89,7 +89,6 @@ body {
   padding: 20px;
   position: absolute;
   top: 50px;
-  left: 250px;
   transition: .5s;
 }
 @media (min-width: 768px) {

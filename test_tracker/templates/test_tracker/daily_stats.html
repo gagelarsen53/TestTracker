@@ -9,13 +9,12 @@
 </style>
 
 <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar"></div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
     <h1 class="page-header">{{ product.name }}-{{ product.version }} Statistics on {{ date }}</h1>
     <div id="container">
         <div class="row">
-            <div class="col-xs-4">
+            <div class="col-md-4">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -33,13 +32,13 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-xs-4">
+            <div class="col-md-4">
                 <canvas id="pie_chart"></canvas>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-xs-10">
+            <div class="col-md-10">
                 {% if issue_notes %}
                 <table class="table table-striped">
                     <thead data-toggle="collapse" data-target="#issueTableBody">
@@ -81,7 +80,7 @@
         <hr>
         <h1>Results from {{ line_chart_data.today_date }} to {{ line_chart_data.two_weeks_date }}</h1>
             <div class="row">
-                <div class="col-xs-10">
+                <div class="col-md-10">
                     <canvas id="line_chart"></canvas>
                 </div>
             </div>
