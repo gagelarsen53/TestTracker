@@ -30,10 +30,12 @@
                                 data-id="{% url 'duplicate_product' product.pk %}">
                             <span class="glyphicon glyphicon-duplicate"></span>
                         </button>
-                        <button type="button" title="Delete Product" class="update-product btn btn-sm btn-danger"
-                                data-id="{% url 'delete_product' product.pk %}">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </button>
+                            {% if user.is_staff %}
+                            <button type="button" title="Delete Product" class="update-product btn btn-sm btn-danger"
+                                    data-id="{% url 'delete_product' product.pk %}">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>
