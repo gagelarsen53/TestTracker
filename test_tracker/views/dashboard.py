@@ -6,10 +6,7 @@
 * Copyright: (c) GLD
 ********************************************************************************
 """
-from io import BytesIO
-import base64
 import datetime
-import matplotlib.pyplot as plt
 
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -188,20 +185,21 @@ def delete_results_for_date(request, name, version, day, month, year):
 def copy_result_to_current_date(request, name, version, day, month, year, pk):
     product = Product.objects.get(name=name, version=version)
     date = datetime.datetime(year=year, day=day, month=month)
-    current_date = datetime.date.today()
+    result_dates = TestResult.objects.filter(testcase__product=product).values('date').distinct()
+    current_result_date = max([date['date'] for date in result_dates])
     copied_result = TestResult.objects.get(testcase__product=product, pk=pk, date=date)
     testcase = copied_result.testcase
     note = copied_result.note + " (COPIED)"
 
     try:
-        cur_result = TestResult.objects.get(testcase__product=product, testcase=testcase, date=current_date)
+        cur_result = TestResult.objects.get(testcase__product=product, testcase=testcase, date=current_result_date)
         cur_result.status = copied_result.status
         cur_result.note = note
         cur_result.author = request.user
         cur_result.save()
     except ObjectDoesNotExist:
         new_result = TestResult(
-            date=current_date,
+            date=current_result_date,
             status=copied_result.status,
             author=request.user,
             testcase=testcase,
@@ -209,6 +207,3 @@ def copy_result_to_current_date(request, name, version, day, month, year, pk):
         )
         new_result.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
-
-
