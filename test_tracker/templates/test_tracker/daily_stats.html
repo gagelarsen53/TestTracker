@@ -6,6 +6,10 @@
     th {
         font-size: 25px;
     }
+    h3 {
+        font-weight: bold;
+        cursor: pointer;
+    }
 </style>
 
 <div class="row">
@@ -40,39 +44,36 @@
         <div class="row">
             <div class="col-md-10">
                 {% if issue_notes %}
-                <table class="table table-striped">
-                    <thead data-toggle="collapse" data-target="#issueTableBody">
-                        <tr>
-                            <th colspan="2">Issues</th>
-                        </tr>
-                    </thead>
-                    <tbody class="collapse in" id="issueTableBody">
-                    {% for issue in issue_notes %}
-                        <tr>
-                            <td class="col-sm-3">{{ issue.0 }}</td>
-                            <td>{{ issue.1 }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <h3 data-toggle="collapse" data-target="#issueTable">Issues</h3>
+                <div class="collapse in" id="issueTable">
+                    <table class="table table-striped">
+                        <tbody>
+                        {% for issue in issue_notes %}
+                            <tr>
+                                <td class="col-sm-3">{{ issue.0 }}</td>
+                                <td>{{ issue.1 }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 {% endif %}
+                <hr>
 
                 {% if bug_notes %}
-                <table class="table table-striped">
-                    <thead data-toggle="collapse" data-target="#bugTableBody">
-                        <tr>
-                            <th colspan="2">Bugs</th>
-                        </tr>
-                    </thead>
-                    <tbody class="collapse in" id="bugTableBody">
-                    {% for bug in bug_notes %}
-                        <tr>
-                            <td class="col-sm-3">{{ bug.0 }}</td>
-                            <td>{{ bug.1 }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <h3 data-toggle="collapse" data-target="#bugTable">Bugs</h3>
+                <div class="collapse in" id="bugTable">
+                    <table class="table table-striped">
+                        <tbody>
+                        {% for bug in bug_notes %}
+                            <tr>
+                                <td class="col-sm-3">{{ bug.0 }}</td>
+                                <td>{{ bug.1 }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 {% endif %}
             </div>
         </div>

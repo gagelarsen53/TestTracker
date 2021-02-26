@@ -116,5 +116,5 @@ def daily_stats(request, name, version, day, month, year):
 
 def get_cleaned_note(result):
     note = result.note
-    note = note.replace(' (copied)', '')
+    note = note.replace(' (COPIED)', '')
     return note
