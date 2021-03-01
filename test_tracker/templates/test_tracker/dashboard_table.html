@@ -27,9 +27,9 @@
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                 </a>
                 {% if user.is_authenticated %}
-                <button data-url="{% url 'delete_results_for_date' product.name product.version date.day date.month date.year %}" class="dashboard-actions result-delete-button no-sort btn btn-xs btn-info">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                </button>
+                    <button data-url="{% url 'delete_results_for_date' product.name product.version date.day date.month date.year %}" class="dashboard-actions result-delete-button no-sort btn btn-xs btn-info">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
                 {% endif %}
             </th>
         {% endfor %}
@@ -42,28 +42,24 @@
         data-update_url="{% url 'update_testcase' case.testcase.pk %}">
         <td>{{ case.testcase.category.category }}</td>
         <td>{{ case.testcase.subcategory.subcategory }}</td>
-        <td>
-            {{ case.testcase.name }}
-            {% if user.is_authenticated %}
-            {% endif %}
-        </td>
+        <td>{{ case.testcase.name }}</td>
         {% for r in case.results %}
             {% if r.0 %}
                 <td  class="dashboard-status-cell" id="result_{{ r.0.id }}"
                     data-update_url="{% url 'update_result' r.0.pk %}"
                     data-copy_current_url="{% url 'copy_result_to_current_date' product.name product.version r.0.date.day r.0.date.month r.0.date.year r.0.pk %}"
                     data-delete_url="{% url 'delete_testresult' r.0.pk %}" data-result_id="{{ r.0.id }}">
-                    {% if user.is_authenticated %}
-                    <div title="{{ r.0.status.status }}&#013;{{ r.0.author }}&#013;{{ r.0.note }}" class="status-div"
+                    <div title="{{ r.0.status.status }}&#10;{{ r.0.author }}&#10;{{ r.0.note }}" class="status-div"
                         style='color: {{ r.0.status.text_hex_color }}; background-color: {{ r.0.status.hex_color }}'>
-                        <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-result_id="{{ r.0.id }}"
-                        data-id="{% url 'update_result' r.0.pk %}" id="link_result_{{ r.0.id }}">
+                        {% if user.is_authenticated %}
+                            <a style="color: {{ r.0.status.text_hex_color }};" class="update-testresult" data-result_id="{{ r.0.id }}"
+                            data-id="{% url 'update_result' r.0.pk %}" id="link_result_{{ r.0.id }}">
+                                {{ r.0.status.status }}
+                            </a>
+                        {% else %}
                             {{ r.0.status.status }}
-                        </a>
+                        {% endif %}
                     </div>
-                    {% else %}
-                    {{ r.0.status.status }}
-                    {% endif %}
                 </td>
             {% else %}
                 <td style="bgcolor: #d4d6d8;"></td>
@@ -99,8 +95,7 @@
 
     $('.result-delete-button').click(function() {
         x = confirm("Do you really want to delete?");
-        if (x)
-        {
+        if (x) {
             window.location = $(this).data('url');
         }
     })
