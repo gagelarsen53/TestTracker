@@ -1,6 +1,15 @@
 {% extends "general/general_layout.html" %}
 
 {% block content %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="alert alert-success">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
 <h1 class="page-header">Welcome to Info Tracker!</h1>
 
 {% endblock %}

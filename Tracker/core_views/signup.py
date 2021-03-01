@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 
@@ -13,7 +14,8 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('index')
+            messages.success(request, f'Registration was successful for {username}')
+            return redirect('landing')
     else:
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
