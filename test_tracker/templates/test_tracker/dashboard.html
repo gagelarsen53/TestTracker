@@ -3,7 +3,7 @@
 {% block test_tracker_content %}
 {% load static %}
 
-<button id="showSidebar" onclick="showSidebar()" class="btn btn-info" style="display: none;">
+<button id="showSidebar" onclick="showSidebar()" class="btn btn-info">
     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 </button>
 
@@ -99,16 +99,19 @@
         sidebar.style.width = '250px';
         sidebar.style.paddingLeft = '20px';
         sidebar.style.paddingRight = '20px';
-        document.getElementById('showSidebar').style.display = 'none';
         document.getElementsByClassName('main')[0].style.left = '250px';
+        sessionStorage.sidebar_status = "expanded";
+        document.getElementById('sidebar').style.display = 'block';
+        console.log('here')
     }
     function hideSidebar() {
         var sidebar = document.getElementById('sidebar');
         sidebar.style.width = '0px';
         sidebar.style.paddingLeft = '0px';
         sidebar.style.paddingRight = '0px';
-        document.getElementById('showSidebar').style.display = 'block';
         document.getElementsByClassName('main')[0].style.left = '25px';
+        sessionStorage.sidebar_status = "collapsed";
+        console.log('there')
     }
 
     function load_dashboard(dashboard_url) {
@@ -314,6 +317,18 @@
     })
 
     $(document).ready(function() {
+        if ($('#sidebar') != undefined) {
+            $('.main').css({'left': '250px'});
+        }
+        if (sessionStorage.sidebar_status) {
+            if (sessionStorage.sidebar_status != "expanded") {
+                document.getElementById('sidebar').style.display = 'none';
+                hideSidebar();
+            }
+        } else {
+            sessionStorage.sidebar_status = "expanded";
+        }
+
         $(".create-testcase").modalForm({
             formURL: "{% url 'create_testcase' %}"
         });
@@ -336,10 +351,6 @@
         $('body').click(function () {
             $("#contextMenu").hide();
         });
-
-        if ($('#sidebar') != undefined) {
-            $('.main').css({'left': '250px'});
-        }
     });
 
 </script>
