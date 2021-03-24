@@ -2,8 +2,17 @@
 
 {% block test_tracker_content %}
 {% load static %}
+
+<button id="showSidebar" onclick="showSidebar()" class="btn btn-info">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+</button>
+
 <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar" id="sidebar">
+    <div id="sidebar" class="sidebar">
+        <button id="hideSidebar" onclick="hideSidebar()" class="btn btn-info">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        </button>
+
         <ul class="nav nav-sidebar">
 
             <li><h3>Filter Options:</h3></li>
@@ -61,11 +70,12 @@
             {% endif %}
         </ul>
     </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+    <div class="main">
         <h1 class="page-header">{{ product.get_product_string }}</h1>
         <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#dashboard">Dashboard</a></li>
-          <li><a data-toggle="tab" href="#info">Info</a></li>
+            <li class="active"><a data-toggle="tab" href="#dashboard">Dashboard</a></li>
+            <li><a data-toggle="tab" href="#info">Info</a></li>
         </ul>
 
         <div class="tab-content">
@@ -84,36 +94,48 @@
 </div>
 
 <script>
+    function showSidebar() {
+        var sidebar = document.getElementById('sidebar');
+        sidebar.style.width = '250px';
+        sidebar.style.paddingLeft = '20px';
+        sidebar.style.paddingRight = '20px';
+        document.getElementsByClassName('main')[0].style.left = '250px';
+        sessionStorage.sidebar_status = "expanded";
+        document.getElementById('sidebar').style.display = 'block';
+        console.log('here')
+    }
+    function hideSidebar() {
+        var sidebar = document.getElementById('sidebar');
+        sidebar.style.width = '0px';
+        sidebar.style.paddingLeft = '0px';
+        sidebar.style.paddingRight = '0px';
+        document.getElementsByClassName('main')[0].style.left = '25px';
+        sessionStorage.sidebar_status = "collapsed";
+        console.log('there')
+    }
 
     function load_dashboard(dashboard_url) {
+        var had_days = false;
+        if (localStorage.getItem('number_of_days_string')) {
+            number_of_days_string = localStorage.getItem('number_of_days_string');
+            number_of_days = Number(number_of_days_string, 10);
+            dashboard_url += "?days=" + number_of_days;
+            had_days = true;
+        }
 
-            var had_days = false;
-            if (localStorage.getItem('number_of_days_string'))
-            {
-                number_of_days_string = localStorage.getItem('number_of_days_string');
-                number_of_days = Number(number_of_days_string, 10);
-                dashboard_url += "?days=" + number_of_days;
-                had_days = true;
+        empty_days = $("#showEmptyDays")[0];
+        localStorage.setItem("show_empty_days", empty_days.checked);
+        var show_empty = empty_days.checked
+        if (show_empty) {
+            if (had_days) {
+                dashboard_url += "&";
+            } else {
+                dashboard_url += "?";
             }
+            dashboard_url += "show_empty_days=True";
+        }
 
-            empty_days = $("#showEmptyDays")[0];
-            localStorage.setItem("show_empty_days", empty_days.checked);
-            var show_empty = empty_days.checked
-            if (show_empty)
-            {
-                if (had_days)
-                {
-                    dashboard_url += "&";
-                }
-                else
-                {
-                    dashboard_url += "?";
-                }
-                dashboard_url += "show_empty_days=True"
-            }
-
-            $("#dashboard").load(dashboard_url, function() {
-
+        $("#dashboard").load(dashboard_url, function() {
             contextMenuClone = $("#contextMenu").clone();
             $(".update-testcase").each(function () {
                 $(this).modalForm({formURL: $(this).data('id')});
@@ -129,20 +151,18 @@
                 var result_id = $(this).data('result_id');
                 var update_result_link_url = $(this).data('id')
                 function updateResultModalFormLink() {
-                    $("#link_result_" + result_id).modalForm(
-                        {
-                            formURL: update_result_link_url,
-                            asyncUpdate: true,
-                            asyncSettings: {
-                                closeOnSubmit: true,
-                                successMessage: 'testing',
-                                dataUrl: "/TestTracker/async/update/result/" + result_id,
-                                dataElementId: "#result_" + result_id,
-                                dataKey: "result",
-                                addModalFormFunction: updateResultModalFormLink
-                            }
+                    $("#link_result_" + result_id).modalForm({
+                        formURL: update_result_link_url,
+                        asyncUpdate: true,
+                        asyncSettings: {
+                            closeOnSubmit: true,
+                            successMessage: 'testing',
+                            dataUrl: "/TestTracker/async/update/result/" + result_id,
+                            dataElementId: "#result_" + result_id,
+                            dataKey: "result",
+                            addModalFormFunction: updateResultModalFormLink
                         }
-                    );
+                    });
                 }
                 updateResultModalFormLink();
             });
@@ -154,41 +174,30 @@
                 var t = $(this)
                 var url = $(this).data('url')
                 $(this).modalForm({formURL: $(this).data('url')});
-            })
-            ;
+            });
 
-{% if user.is_authenticated %}
-            $( "#dashboard-table tr td" ).contextmenu(function(e) {
-                $("#contextMenu").replaceWith(contextMenuClone.clone());
-                var rowOverlay = $('#rowOverlay');
-                var row = $(this).parent(".test-case-row");
-                var bottomWidth = row.css('width');
-                var bottomHeight = row.css('height');
-                var rowPos = row.position();
-                bottomTop = rowPos.top;
-                bottomLeft = rowPos.left;
-                rowOverlay.css({
-                  position: 'absolute',
-                  top: bottomTop,
-                  left: bottomLeft,
-                  width: bottomWidth,
-                  height: bottomHeight
-                });
-                rowOverlay.show();
+            {% if user.is_authenticated %}
+                $( "#dashboard-table tr td" ).contextmenu(function(e) {
+                    $("#contextMenu").replaceWith(contextMenuClone.clone());
+                    var row = $(this).parent(".test-case-row");
+                    var bottomWidth = row.css('width');
+                    var bottomHeight = row.css('height');
+                    var rowPos = row.position();
+                    var bottomTop = rowPos.top;
+                    var bottomLeft = rowPos.left;
 
-                // Update URLS
-                var is_result = $(this).closest(".dashboard-status-cell").length;
+                    // Update URLS
+                    var is_result = $(this).closest(".dashboard-status-cell").length;
 
-                if (is_result) {
-                    var result_id = $(this).data("result_id");
-                    var delete_result_url = $(this).data("delete_url");
-                    var update_result_url = $(this).data("update_url");
-                    var copy_result_to_current = $(this).data("copy_current_url");
+                    if (is_result) {
+                        var result_id = $(this).data("result_id");
+                        var delete_result_url = $(this).data("delete_url");
+                        var update_result_url = $(this).data("update_url");
+                        var copy_result_to_current = $(this).data("copy_current_url");
 
-                    var x = $("#update-testresult-context")
-                    function updateResultModalForm() {
-                        $("#update-testresult-context").modalForm(
-                            {
+                        var x = $("#update-testresult-context")
+                        function updateResultModalForm() {
+                            $("#update-testresult-context").modalForm({
                                 formURL: update_result_url,
                                 asyncUpdate: true,
                                 asyncSettings: {
@@ -199,56 +208,51 @@
                                     dataKey: "result",
                                     addModalFormFunction: updateResultModalForm
                                 }
-                            }
-                        );
-                    }
-                    updateResultModalForm();
-                    $("#delete-testresult-context").modalForm({formURL: delete_result_url});
-                    $('#copy-current-testresult-context').click(function() {
-                        x = confirm("Do you really want to copy result to current date?");
-                        if (x)
-                        {
-                            window.location = copy_result_to_current;
+                            });
                         }
-                    })
-                }
+                        updateResultModalForm();
+                        $("#delete-testresult-context").modalForm({formURL: delete_result_url});
+                        $('#copy-current-testresult-context').click(function() {
+                            x = confirm("Do you really want to copy result to current date?");
+                            if (x) {
+                                window.location = copy_result_to_current;
+                            }
+                        })
+                    }
 
-                var delete_testcase_url = $(this).parent(".test-case-row").data("delete_url");
-                var update_testcase_url = $(this).parent(".test-case-row").data("update_url");
-        console.log($(this).parent(".test-case-row"));
+                    var delete_testcase_url = $(this).parent(".test-case-row").data("delete_url");
+                    var update_testcase_url = $(this).parent(".test-case-row").data("update_url");
 
-                $("#update-testcase-context").modalForm({formURL: update_testcase_url});
-                $("#delete-testcase-context").modalForm({formURL: delete_testcase_url});
+                    $("#update-testcase-context").modalForm({formURL: update_testcase_url});
+                    $("#delete-testcase-context").modalForm({formURL: delete_testcase_url});
 
-                var sb = $("#sidebar");
-                var nb = $("#navbar");
-                var sb_width = sb["0"].clientWidth;  // sidebar width
-                var nb_height = nb["0"].clientHeight + 20;  // Navbar height plus padding
-                $("#contextMenu").css({
-                   display: "block",
-                   left: e.pageX - sb_width,
-                   top: e.pageY - nb_height
+                    var sb = $("#sidebar");
+                    var nb = $("#navbar");
+                    var sb_width = sb["0"].clientWidth;  // sidebar width
+                    var nb_height = nb["0"].clientHeight + 20;  // Navbar height plus padding
+                    $("#contextMenu").css({
+                        display: "block",
+                        left: e.pageX - sb_width,
+                        top: e.pageY - nb_height
+                    });
+
+                    if (!is_result) {
+                        $("#delete-testresult-context").hide();
+                        $("#update-testresult-context").hide();
+                        $("#copy-current-testresult-context").hide();
+                        $("#divide-test-context").hide();
+                    } else {
+                        $("#delete-testresult-context").show();
+                        $("#update-testresult-context").show();
+                        $("#copy-current-testresult-context").show();
+                        $("#divide-test-context").show();
+                    }
+                    return false;
                 });
 
-                if (!is_result) {
-                    $("#delete-testresult-context").hide();
-                    $("#update-testresult-context").hide();
-                    $("#copy-current-testresult-context").hide();
-                    $("#divide-test-context").hide();
-                }
-                else
-                {
-                    $("#delete-testresult-context").show();
-                    $("#update-testresult-context").show();
-                    $("#copy-current-testresult-context").show();
-                    $("#divide-test-context").show();
-                }
-                return false;
-            });
-
-            // Populate From Local Storage
-            set_filters();
-{% endif %}
+                // Populate From Local Storage
+                set_filters();
+            {% endif %}
         });
     }
 
@@ -267,16 +271,16 @@
     });
 
     $("#test-case-filter-text").on("keyup", function() {
-      show_active_value = localStorage.getItem('show_active_value') == 'true' ? true : false;
-      var value = $(this).val().toLowerCase();
-      localStorage.setItem("dashboard_filter_string", value);
-      $("#dashboard-table tr").filter(function() {
-        var text = $(this).text().toLowerCase();
-        var idx = text.indexOf(value) > -1
-        if (show_active_value || $(this).hasClass('test-active-True')) {
-          $(this).toggle(idx)
-        }
-      });
+        show_active_value = localStorage.getItem('show_active_value') == 'true' ? true : false;
+        var value = $(this).val().toLowerCase();
+        localStorage.setItem("dashboard_filter_string", value);
+        $("#dashboard-table tr").filter(function() {
+            var text = $(this).text().toLowerCase();
+            var idx = text.indexOf(value) > -1;
+            if (show_active_value || $(this).hasClass('test-active-True')) {
+                $(this).toggle(idx)
+            }
+        });
     });
 
     function set_filters() {
@@ -285,10 +289,6 @@
         $('#showInactiveCases').prop('checked', show_active_value);
         toggle_view(".test-active-False", show_active_value);
 
-        // show_actions_value = localStorage.getItem('show_actions_value') == 'true' ? true : false;
-        // $('.showActions').prop('checked', show_actions_value);
-        // toggle_view(".dashboard-actions", show_actions_value);
-        
         dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
         $('#test-case-filter-text').val(dashboard_filter_string);
         $('#test-case-filter-text').keyup();
@@ -299,7 +299,6 @@
         show_empty_days = localStorage.getItem('show_empty_days') == 'true' ? true : false;
         $('#showEmptyDays').prop('checked', show_empty_days);
     }
-    set_filters();
 
     dashboard_filter_string = localStorage.getItem('dashboard_filter_string') || '';
     if (dashboard_filter_string != '') {
@@ -307,44 +306,7 @@
         $('#test-case-filter-text').keyup()
     }
 
-    $(document).ready(function() {
-        $(".create-testcase").modalForm({
-            formURL: "{% url 'create_testcase' %}"
-        });
-    });
-
-    $(document).ready(function() {
-        $(".create-test-category").modalForm({
-            formURL: "{% url 'create_testcategory' %}"
-        });
-    });
-
-    $(document).ready(function() {
-        $(".create-test-subcategory").modalForm({
-            formURL: "{% url 'create_testsubcategory' %}"
-        });
-    });
-
-    $(document).ready(function() {
-        $(".create-test-status").modalForm({
-            formURL: "{% url 'create_teststatus' %}"
-        });
-    });
-
     var contextMenuClone = undefined;
-
-    $(document).ready(function() {
-
-
-        $("#info").load("{% url 'dashboard_info' product.name product.version %}");
-        load_dashboard("{% url 'dashboard_table' product.name product.version %}");
-
-        $('body').click(function () {
-            $("#rowOverlay").hide();
-            $("#contextMenu").hide();
-        });
-
-    });
 
     $('.update-dashboard-view').click(function() {
         number_of_days_string = Number($('#dayCount').val(), 10) || 5;
@@ -353,6 +315,43 @@
         url = "{% url 'dashboard_table' product.name product.version %}";
         load_dashboard(url);
     })
+
+    $(document).ready(function() {
+        if ($('#sidebar') != undefined) {
+            $('.main').css({'left': '250px'});
+        }
+        if (sessionStorage.sidebar_status) {
+            if (sessionStorage.sidebar_status != "expanded") {
+                document.getElementById('sidebar').style.display = 'none';
+                hideSidebar();
+            }
+        } else {
+            sessionStorage.sidebar_status = "expanded";
+        }
+
+        $(".create-testcase").modalForm({
+            formURL: "{% url 'create_testcase' %}"
+        });
+
+        $(".create-test-category").modalForm({
+            formURL: "{% url 'create_testcategory' %}"
+        });
+
+        $(".create-test-subcategory").modalForm({
+            formURL: "{% url 'create_testsubcategory' %}"
+        });
+
+        $(".create-test-status").modalForm({
+            formURL: "{% url 'create_teststatus' %}"
+        });
+
+        $("#info").load("{% url 'dashboard_info' product.name product.version %}");
+        load_dashboard("{% url 'dashboard_table' product.name product.version %}");
+
+        $('body').click(function () {
+            $("#contextMenu").hide();
+        });
+    });
 
 </script>
 
