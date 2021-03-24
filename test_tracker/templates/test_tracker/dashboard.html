@@ -102,7 +102,6 @@
         document.getElementsByClassName('main')[0].style.left = '250px';
         sessionStorage.sidebar_status = "expanded";
         document.getElementById('sidebar').style.display = 'block';
-        console.log('here')
     }
     function hideSidebar() {
         var sidebar = document.getElementById('sidebar');
@@ -111,7 +110,6 @@
         sidebar.style.paddingRight = '0px';
         document.getElementsByClassName('main')[0].style.left = '25px';
         sessionStorage.sidebar_status = "collapsed";
-        console.log('there')
     }
 
     function load_dashboard(dashboard_url) {
@@ -147,6 +145,7 @@
             $(".create-testresult").modalForm({
                 formURL: "{% url 'create_result' %}"
             });
+
             $(".update-testresult").each(function () {
                 var result_id = $(this).data('result_id');
                 var update_result_link_url = $(this).data('id')
@@ -156,7 +155,7 @@
                         asyncUpdate: true,
                         asyncSettings: {
                             closeOnSubmit: true,
-                            successMessage: 'testing',
+                            successMessage: ' ',
                             dataUrl: "/TestTracker/async/update/result/" + result_id,
                             dataElementId: "#result_" + result_id,
                             dataKey: "result",
@@ -202,7 +201,7 @@
                                 asyncUpdate: true,
                                 asyncSettings: {
                                     closeOnSubmit: true,
-                                    successMessage: 'testing',
+                                    successMessage: ' ',
                                     dataUrl: "/TestTracker/async/update/result/" + result_id,
                                     dataElementId: "#result_" + result_id,
                                     dataKey: "result",
