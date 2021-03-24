@@ -11,7 +11,13 @@
     </div>
  
     <div class="modal-body">
+        {% if object.version %}
         <p>Are you sure you want to delete {{ object.name }}-{{ object.version }}?</p>
+        {% elif object.name %}
+        <p>Are you sure you want to delete {{ object.name }}?</p>
+        {% else %}
+        <p>Are you sure you want to delete the test result?</p>
+        {% endif %}
     </div>
 
     <div class="modal-footer">
