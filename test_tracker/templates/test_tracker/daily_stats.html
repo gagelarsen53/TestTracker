@@ -9,79 +9,82 @@
     h3 {
         font-weight: bold;
         cursor: pointer;
+        margin: 0px;
+        padding: 10px 0px;
     }
+    #line_chart_container { margin-bottom: 40px; }
 </style>
 
 <div class="row">
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-    <h1 class="page-header">{{ product.name }}-{{ product.version }} Statistics on {{ date }}</h1>
-    <div id="container">
-        <div class="row">
-            <div class="col-md-4">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Status</th>
-                            <th>Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for status, count in counts.items %}
-                        <tr>
-                            <td>{{ status }}</td>
-                            <td>{{ count }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-4">
-                <canvas id="pie_chart"></canvas>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-10">
-                {% if issue_notes %}
-                <h3 data-toggle="collapse" data-target="#issueTable">Issues</h3>
-                <div class="collapse in" id="issueTable">
+        <h1 class="page-header">{{ product.name }}-{{ product.version }} Statistics on {{ date }}</h1>
+        <div id="container">
+            <div class="row">
+                <div class="col-md-4">
                     <table class="table table-striped">
-                        <tbody>
-                        {% for issue in issue_notes %}
+                        <thead>
                             <tr>
-                                <td class="col-sm-3">{{ issue.0 }}</td>
-                                <td>{{ issue.1 }}</td>
+                                <th>Status</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for status, count in counts.items %}
+                            <tr>
+                                <td>{{ status }}</td>
+                                <td>{{ count }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                <hr>
-                {% endif %}
-
-                {% if bug_notes %}
-                <h3 data-toggle="collapse" data-target="#bugTable">Bugs</h3>
-                <div class="collapse in" id="bugTable">
-                    <table class="table table-striped">
-                        <tbody>
-                        {% for bug in bug_notes %}
-                            <tr>
-                                <td class="col-sm-3">{{ bug.0 }}</td>
-                                <td>{{ bug.1 }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="col-md-4">
+                    <canvas id="pie_chart"></canvas>
                 </div>
-                {% endif %}
             </div>
-        </div>
 
-        <hr>
-        <h1>Results from {{ line_chart_data.today_date }} to {{ line_chart_data.two_weeks_date }}</h1>
             <div class="row">
                 <div class="col-md-10">
+                    {% if issue_notes %}
+                    <h3 data-toggle="collapse" data-target="#issueTable">Issues</h3>
+                    <div class="collapse in" id="issueTable">
+                        <table class="table table-striped">
+                            <tbody>
+                            {% for issue in issue_notes %}
+                                <tr>
+                                    <td class="col-sm-3">{{ issue.0 }}</td>
+                                    <td>{{ issue.1 }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+                    {% endif %}
+
+                    {% if bug_notes %}
+                    <h3 data-toggle="collapse" data-target="#bugTable">Bugs</h3>
+                    <div class="collapse in" id="bugTable">
+                        <table class="table table-striped">
+                            <tbody>
+                            {% for bug in bug_notes %}
+                                <tr>
+                                    <td class="col-sm-3">{{ bug.0 }}</td>
+                                    <td>{{ bug.1 }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <hr>
+            <h1>Results from {{ line_chart_data.today_date }} to {{ line_chart_data.two_weeks_date }}</h1>
+            <div class="row">
+                <div class="col-md-10" id="line_chart_container">
                     <canvas id="line_chart"></canvas>
                 </div>
             </div>
@@ -124,16 +127,20 @@
     window.onload = function() {
         var piechart = document.getElementById('pie_chart');
         piechart.width = 600;
-        var ctx = piechart.getContext('2d');
-        piechart = new Chart(ctx, pie_config);
+        var pie_ctx = piechart.getContext('2d');
+        piechart = new Chart(pie_ctx, pie_config);
 
-        var linechart = document.getElementById('line_chart');
-        line_chart.height = 120;
-        var ctx = linechart.getContext('2d');
-        linechart = new Chart(ctx, {
-            type: 'line',
-            data: line_config['data']
-        });
+        if (line_config['data']['labels'].length == 0) {
+            document.getElementById('line_chart_container').innerHTML = '--- No results uploaded within the past two weeks ---';
+        } else {
+            var linechart = document.getElementById('line_chart')
+            var line_ctx = linechart.getContext('2d');
+            line_chart.height = 120;
+            linechart = new Chart(line_ctx, {
+                type: 'line',
+                data: line_config['data']
+            });
+        }
     };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
